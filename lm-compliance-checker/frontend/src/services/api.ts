@@ -153,7 +153,7 @@ export interface DashboardStats {
   }[];
 }
 
-const API_BASE = 'https://grumpy-plants-type.loca.lt/api';
+const API_BASE = 'https://ifwow-152-58-187-14.free.pinggy.net/api';
 
 export const api = {
   // ── Existing endpoints ─────────────────────────────────────────────────
