@@ -1,0 +1,17 @@
+[tool.pytest.ini_options]
+# Run from backend/ directory: pytest tests/ -v
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+
+# Add backend/ to sys.path so all imports resolve without install
+pythonpath = ["."]
+
+# Suppress noisy warnings from third-party libs
+filterwarnings = [
+    "ignore::DeprecationWarning:sqlalchemy",
+    "ignore::DeprecationWarning:pkg_resources",
+    "ignore::PendingDeprecationWarning",
+]

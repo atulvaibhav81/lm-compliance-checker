@@ -1,0 +1,211 @@
+# =============================================================================
+# LM Compliance Checker — Rules Configuration
+# Legal Metrology (Packaged Commodities) Rules, 2011
+# =============================================================================
+# All thresholds here are configurable without code changes.
+# Services load this file at startup via RulesConfig.load().
+# =============================================================================
+
+# ─── Font Size Thresholds ─────────────────────────────────────────────────────
+# Minimum character height in millimetres as per LM-PC Rule 8
+font_size:
+  tolerance_pct: 10           # ±10% tolerance on measured height (OCR approximation)
+  pdp_area_thresholds:
+    # Key is the upper limit of the area in cm2. Uses the first tier where pdp_area <= key.
+    50:
+      min_height_mm: 1.0
+      mrp_min_height_mm: 1.5
+      net_qty_min_height_mm: 1.0
+      manufacturer_min_height_mm: 1.0
+    100:
+      min_height_mm: 1.5
+      mrp_min_height_mm: 2.0
+      net_qty_min_height_mm: 1.5
+      manufacturer_min_height_mm: 1.5
+    500:
+      min_height_mm: 2.5
+      mrp_min_height_mm: 3.5
+      net_qty_min_height_mm: 2.5
+      manufacturer_min_height_mm: 2.5
+    2500:
+      min_height_mm: 4.0
+      mrp_min_height_mm: 5.0
+      net_qty_min_height_mm: 4.0
+      manufacturer_min_height_mm: 4.0
+    999999: # > 2500 cm2
+      min_height_mm: 6.0
+      mrp_min_height_mm: 7.0
+      net_qty_min_height_mm: 6.0
+      manufacturer_min_height_mm: 6.0
+
+# ─── USP (Unit Sale Price) Validator ─────────────────────────────────────────
+# Rule 18 — Unit Sale Price must be printed when MRP > threshold
+usp:
+  tolerance_pct: 2.0          # ±2% acceptable difference between printed & computed USP
+  mandatory_above_mrp: 0      # USP mandatory for all products (0 = always required)
+  supported_units:            # Normalisation map: alias → canonical unit symbol
+    g: g
+    gm: g
+    gram: g
+    grams: g
+    kg: kg
+    kilogram: kg
+    kilograms: kg
+    ml: ml
+    mL: ml
+    millilitre: ml
+    millilitres: ml
+    l: l
+    L: l
+    litre: l
+    litres: l
+    nos: nos
+    number: nos
+    piece: nos
+    pieces: nos
+  unit_conversions:           # Conversion to base units for USP calculation
+    g_to_kg: 0.001
+    ml_to_l: 0.001
+    l_to_l: 1.0
+    kg_to_kg: 1.0
+    g_to_g: 1.0
+    ml_to_ml: 1.0
+
+# ─── Penalty Matrix ───────────────────────────────────────────────────────────
+# Each rule_code maps to Legal Metrology Act section + fine ranges (INR)
+# Section 36 of Legal Metrology Act 2009 governs penalties
+penalty_matrix:
+  R6_01_MRP:
+    act_section: "Rule 6(1)(a) — LM-PC Rules 2011 read with Section 36 LM Act 2009"
+    description: "Maximum Retail Price (MRP) not declared or illegible"
+    first_offense_min: 5000
+    first_offense_max: 25000
+    repeat_offense_min: 25000
+    repeat_offense_max: 100000
+    imprisonment_months: 0
+    notes: "Mandatory under Rule 6(1)(a). Check printed value format."
+
+  R6_02_NET_QTY:
+    act_section: "Rule 6(1)(b) — LM-PC Rules 2011"
+    description: "Net Quantity / Net Weight not declared in standard unit"
+    first_offense_min: 2000
+    first_offense_max: 10000
+    repeat_offense_min: 10000
+    repeat_offense_max: 50000
+    imprisonment_months: 0
+    notes: "Unit must be in standard metric system (g, kg, ml, l)."
+
+  R6_03_MANUFACTURER:
+    act_section: "Rule 6(1)(c) — LM-PC Rules 2011"
+    description: "Manufacturer name and address incomplete or missing"
+    first_offense_min: 1000
+    first_offense_max: 5000
+    repeat_offense_min: 5000
+    repeat_offense_max: 25000
+    imprisonment_months: 0
+
+  R6_04_MONTH_YEAR:
+    act_section: "Rule 6(1)(d) — LM-PC Rules 2011"
+    description: "Month and Year of manufacture / packing / import not declared"
+    first_offense_min: 1000
+    first_offense_max: 5000
+    repeat_offense_min: 5000
+    repeat_offense_max: 25000
+    imprisonment_months: 0
+
+  R6_05_CONSUMER_CARE:
+    act_section: "Rule 6(1)(k) — LM-PC Rules 2011 (Amendment 2017)"
+    description: "Consumer care / customer care number missing"
+    first_offense_min: 500
+    first_offense_max: 2000
+    repeat_offense_min: 2000
+    repeat_offense_max: 10000
+    imprisonment_months: 0
+
+  R6_06_COUNTRY_OF_ORIGIN:
+    act_section: "Rule 6(1)(m) — LM-PC Rules 2011 (Amendment 2017)"
+    description: "Country of Origin not declared on imported goods"
+    first_offense_min: 2000
+    first_offense_max: 10000
+    repeat_offense_min: 10000
+    repeat_offense_max: 50000
+    imprisonment_months: 0
+
+  R6_07_FONT_SIZE:
+    act_section: "Rule 8 — LM-PC Rules 2011"
+    description: "Font size / print area below minimum threshold (< 1mm height)"
+    first_offense_min: 2000
+    first_offense_max: 8000
+    repeat_offense_min: 8000
+    repeat_offense_max: 30000
+    imprisonment_months: 0
+
+  R6_08_USP:
+    act_section: "Rule 18 — LM-PC Rules 2011"
+    description: "Unit Sale Price not declared or mathematically incorrect"
+    first_offense_min: 1000
+    first_offense_max: 5000
+    repeat_offense_min: 5000
+    repeat_offense_max: 25000
+    imprisonment_months: 0
+
+  R6_09_BARCODE:
+    act_section: "Rule 6(1) — LM-PC Rules 2011 (Barcode Guidelines)"
+    description: "Barcode/QR code absent, unreadable, or mismatched with product details"
+    first_offense_min: 1000
+    first_offense_max: 5000
+    repeat_offense_min: 5000
+    repeat_offense_max: 20000
+    imprisonment_months: 0
+
+  R6_10_GENERIC_VIOLATION:
+    act_section: "Section 36 — Legal Metrology Act 2009"
+    description: "General compliance violation"
+    first_offense_min: 500
+    first_offense_max: 5000
+    repeat_offense_min: 5000
+    repeat_offense_max: 25000
+    imprisonment_months: 0
+
+# ─── Barcode Validation ───────────────────────────────────────────────────────
+barcode:
+  supported_symbologies:
+    - EAN-13
+    - EAN-8
+    - CODE-128
+    - CODE-39
+    - QR Code
+    - UPC-A
+    - ITF
+    - PDF417
+    - DataMatrix
+  ean13_checksum_validate: true
+  min_confidence: 0.70        # Minimum decode confidence
+
+# ─── Compliance Rule Thresholds ───────────────────────────────────────────────
+# These mirror the existing rule engine but are now also readable here
+rules:
+  mrp_pattern: "(?i)(MRP|M\\.?R\\.?P\\.?)\\s*[:\\-]?\\s*(?:Rs\\.?|INR|₹)?\\s*(\\d+(?:[.,]\\d{1,2})?)"
+  net_qty_pattern: "(?i)(\\d+(?:\\.\\d+)?\\s*(?:g|gm|grams?|kg|kilograms?|ml|mL|l|L|litres?|liters?|nos?|pcs?|pieces?))"
+  manufacturer_keywords:
+    - "manufactured by"
+    - "mfd by"
+    - "marketed by"
+    - "packed by"
+    - "imported by"
+  consumer_care_pattern: "(?i)(\\d{10}|\\+91[-\\s]\\d{10}|1800[-\\s]?\\d{6,10})"
+  country_of_origin_pattern: "(?i)(made in|country of origin|origin)\\s*:?\\s*([A-Za-z]+)"
+
+# ─── Audit Log ────────────────────────────────────────────────────────────────
+audit:
+  enabled: true
+  log_operations:
+    - UPLOAD
+    - ANALYZE
+    - BATCH_SCAN
+    - PENALTY_CALCULATE
+    - USP_VALIDATE
+    - FONT_CHECK
+    - BARCODE_VALIDATE
+    - EXPORT_PDF
+    - EXPORT_CSV
