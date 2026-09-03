@@ -24,12 +24,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div style={{
-        display: 'flex',
-        height: '100vh',
-        overflow: 'hidden',
-        background: 'var(--surface)',
-      }}>
+      <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-[var(--surface)]">
         {/* Sidebar */}
         <Sidebar
           collapsed={sidebarCollapsed}
@@ -38,97 +33,39 @@ function App() {
         />
 
         {/* Main content area */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div className="flex-1 flex flex-col overflow-hidden">
           {/* Top bar */}
-          <header style={{
-            height: '58px',
-            borderBottom: '1px solid var(--border-strong)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 28px',
-            background: 'rgba(244,251,243,0.92)',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
-            flexShrink: 0,
-            boxShadow: '0 1px 0 var(--border)',
-          }}>
-            <div style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.78rem',
-              fontWeight: 700,
-              color: 'var(--text-muted)',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-            }}>
-              Legal Metrology (Packaged Commodities) Rules, 2011
+          <header className="h-[58px] border-b border-[var(--border-strong)] flex items-center justify-between px-4 md:px-7 bg-[rgba(244,251,243,0.92)] backdrop-blur-md shrink-0 shadow-[0_1px_0_var(--border)]">
+            <div className="font-[family-name:var(--font-body)] text-xs font-bold text-[var(--text-muted)] tracking-wider uppercase truncate max-w-[50%] md:max-w-none">
+              Legal Metrology Rules, 2011
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="flex items-center gap-2 md:gap-3">
               {/* API status badge */}
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '7px',
-                padding: '5px 12px',
-                background: 'rgba(255,255,255,0.9)',
-                border: '1px solid var(--border-strong)',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                fontFamily: 'var(--font-body)',
-                color: 'var(--text-primary)',
-              }}>
+              <div className="inline-flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-white/90 border border-[var(--border-strong)] rounded-full text-[9px] md:text-[11px] font-bold tracking-wider uppercase font-[family-name:var(--font-body)] text-[var(--text-primary)]">
                 {/* Pinging dot */}
-                <span style={{ position: 'relative', display: 'inline-flex', width: '8px', height: '8px' }}>
+                <span className="relative inline-flex w-2 h-2">
                   {isOnline && (
-                    <span style={{
-                      position: 'absolute',
-                      inset: 0,
-                      borderRadius: '50%',
-                      background: 'var(--accent)',
-                      opacity: 0.7,
-                      animation: 'ping 1.4s cubic-bezier(0,0,0.2,1) infinite',
-                    }} />
+                    <span className="absolute inset-0 rounded-full bg-[var(--accent)] opacity-70 animate-ping" />
                   )}
-                  <span style={{
-                    position: 'relative',
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    background: isOnline ? 'var(--accent)' : 'var(--danger)',
-                    boxShadow: isOnline
-                      ? '0 0 0 2px rgba(66,214,116,0.3)'
-                      : '0 0 0 2px var(--danger-border)',
-                  }} />
+                  <span
+                    className={`relative w-2 h-2 rounded-full ${isOnline ? 'bg-[var(--accent)] shadow-[0_0_0_2px_rgba(66,214,116,0.3)]' : 'bg-[var(--danger)] shadow-[0_0_0_2px_var(--danger-border)]'}`}
+                  />
                 </span>
-                <span style={{ color: isOnline ? 'var(--success)' : 'var(--danger)' }}>
+                <span className={isOnline ? 'text-[var(--success)]' : 'text-[var(--danger)]'}>
                   {isOnline ? 'API Online' : 'API Offline'}
                 </span>
               </div>
 
               {/* Version chip */}
-              <span style={{
-                padding: '4px 10px',
-                background: 'var(--tint-cream)',
-                border: '1px solid var(--tint-sage)',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '10px',
-                fontWeight: 700,
-                color: 'var(--primary)',
-                fontFamily: 'var(--font-body)',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-              }}>
+              <span className="px-2 md:px-2.5 py-1 bg-[var(--tint-cream)] border border-[var(--tint-sage)] rounded-full text-[9px] md:text-[10px] font-bold text-[var(--primary)] font-[family-name:var(--font-body)] tracking-wide uppercase">
                 v2.0.0
               </span>
             </div>
           </header>
 
           {/* Page content */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '28px 32px' }}>
+          <div className="flex-1 overflow-y-auto p-4 md:p-7 lg:p-8">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />

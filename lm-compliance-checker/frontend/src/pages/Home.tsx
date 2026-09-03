@@ -31,19 +31,13 @@ const AnimatedCounter = ({
 
 /* ── Label badge ────────────────────────────────────────── */
 const LabelBadge = ({ children, variant = 'cream' }: { children: React.ReactNode; variant?: 'cream' | 'forest' | 'sage' }) => {
-  const styles: Record<string, React.CSSProperties> = {
-    cream:  { background: 'var(--tint-cream)',  color: 'var(--primary)',   border: '1px solid var(--tint-sage)' },
-    forest: { background: 'var(--primary)',       color: '#E3F0A3',          border: '1px solid var(--primary)' },
-    sage:   { background: 'rgba(186,219,162,0.3)', color: 'var(--text-secondary)', border: '1px solid var(--tint-sage)' },
+  const styles: Record<string, string> = {
+    cream:  'bg-[var(--tint-cream)] text-[var(--primary)] border-[var(--tint-sage)]',
+    forest: 'bg-[var(--primary)] text-[#E3F0A3] border-[var(--primary)]',
+    sage:   'bg-[rgba(186,219,162,0.3)] text-[var(--text-secondary)] border-[var(--tint-sage)]',
   };
   return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: '5px',
-      padding: '4px 12px', borderRadius: 'var(--radius-full)',
-      fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 700,
-      letterSpacing: '0.07em', textTransform: 'uppercase',
-      ...styles[variant],
-    }}>
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-[family-name:var(--font-body)] text-[10px] font-bold tracking-widest uppercase border ${styles[variant]}`}>
       {children}
     </span>
   );
@@ -90,27 +84,17 @@ const FeatureCard = ({
   title: string; desc: string;
   actions: { label: string; onClick: () => void }[];
 }) => (
-  <div className="glass-card" style={{
-    padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px',
-  }}>
-    <div style={{
-      width: '48px', height: '48px', borderRadius: '14px',
-      background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0,
-    }}>
+  <div className="glass-card flex flex-col gap-4.5 p-7">
+    <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: iconBg }}>
       <Icon size={22} color={iconColor} />
     </div>
-    <div style={{ flex: 1 }}>
-      <h3 style={{
-        fontFamily: 'var(--font-body)', fontSize: '1.05rem', fontWeight: 700,
-        color: 'var(--text-primary)', marginBottom: '8px', letterSpacing: '-0.01em',
-      }}>{title}</h3>
-      <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.6 }}>{desc}</p>
+    <div className="flex-1">
+      <h3 className="font-[family-name:var(--font-body)] text-[1.05rem] font-bold text-[var(--text-primary)] mb-2 tracking-tight">{title}</h3>
+      <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{desc}</p>
     </div>
-    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+    <div className="flex gap-2 flex-wrap">
       {actions.map(a => (
-        <button key={a.label} className="btn btn-secondary" onClick={a.onClick}
-          style={{ padding: '7px 16px', fontSize: '0.82rem' }}>
+        <button key={a.label} className="btn btn-secondary px-4 py-2 text-[0.82rem]" onClick={a.onClick}>
           {a.label}
         </button>
       ))}
@@ -127,98 +111,57 @@ const Home = () => {
   const preset = presets[selectedPreset];
 
   return (
-    <div style={{ paddingBottom: '72px', maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="pb-18 max-w-6xl mx-auto">
 
       {/* ═══ HERO SECTION ═══════════════════════════════════ */}
-      <section className="animate-fade-in" style={{
-        padding: '56px 0 64px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        gap: '28px',
-        position: 'relative',
-      }}>
+      <section className="animate-fade-in flex flex-col items-start gap-7 relative py-8 md:py-14">
 
         {/* Gazette sync badge */}
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: '8px',
-          padding: '6px 14px', borderRadius: 'var(--radius-full)',
-          background: 'rgba(255,255,255,0.92)', border: '1px solid var(--border-strong)',
-          backdropFilter: 'blur(10px)',
-        }}>
-          <span style={{ position: 'relative', display: 'inline-flex', width: '8px', height: '8px' }}>
-            <span style={{
-              position: 'absolute', inset: 0, borderRadius: '50%',
-              background: 'var(--accent)', opacity: 0.65,
-              animation: 'ping 1.5s cubic-bezier(0,0,0.2,1) infinite',
-            }} />
-            <span style={{
-              position: 'relative', width: '8px', height: '8px',
-              borderRadius: '50%', background: 'var(--accent)',
-            }} />
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-3.5 md:py-1.5 rounded-full bg-white/90 border border-[var(--border-strong)] backdrop-blur-md">
+          <span className="relative inline-flex w-2 h-2">
+            <span className="absolute inset-0 rounded-full bg-[var(--accent)] opacity-65 animate-ping" />
+            <span className="relative w-2 h-2 rounded-full bg-[var(--accent)]" />
           </span>
-          <span style={{
-            fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700,
-            letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--text-primary)',
-          }}>
-            Gazette Notification &amp; 2024 Amendments Synced
+          <span className="font-[family-name:var(--font-body)] text-[9px] md:text-[11px] font-bold tracking-widest uppercase text-[var(--text-primary)]">
+            Gazette Notification & 2024 Amendments Synced
           </span>
-          <span style={{ color: 'var(--tint-sage)', fontSize: '12px' }}>•</span>
-          <span style={{
-            fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600,
-            color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase',
-          }}>
+          <span className="text-[var(--tint-sage)] text-xs hidden sm:inline">•</span>
+          <span className="font-[family-name:var(--font-body)] text-[9px] md:text-[11px] font-semibold text-[var(--text-muted)] tracking-widest uppercase hidden sm:inline">
             Rule 6(1) Enforced
           </span>
         </div>
 
         {/* Two-column layout */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 420px', gap: '48px',
-          alignItems: 'start', width: '100%',
-        }}>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 lg:gap-12 items-start w-full">
 
           {/* Left column – headline + CTAs + metrics */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <h1 style={{
-              fontFamily: 'var(--font-display)', fontSize: 'clamp(30px,4vw,44px)',
-              fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.025em',
-              color: 'var(--text-primary)', margin: 0,
-            }}>
+          <div className="flex flex-col gap-6">
+            <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-[clamp(30px,4vw,44px)] font-bold leading-tight tracking-tight text-[var(--text-primary)] m-0">
               Automated Packaging Compliance for{' '}
-              <span style={{
-                fontStyle: 'italic', color: 'var(--primary)',
-                textDecoration: 'underline', textDecorationColor: 'var(--accent)',
-                textDecorationThickness: '3px', textUnderlineOffset: '6px',
-              }}>
+              <span className="italic text-[var(--primary)] underline decoration-[var(--accent)] decoration-3 underline-offset-4 md:underline-offset-6">
                 Legal Metrology
               </span>{' '}
               (PCR 2011)
             </h1>
 
-            <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '1rem', lineHeight: 1.7,
-              color: 'var(--text-secondary)', margin: 0, maxWidth: '520px',
-            }}>
+            <p className="font-[family-name:var(--font-body)] text-base leading-relaxed text-[var(--text-secondary)] m-0 max-w-lg">
               Zero-defect regulatory verification for FMCG, Pharma, Cosmetics, and E-Commerce.
               Scan packaging artwork, verify mandatory declarations, validate font heights against
               PDP area tables, and eliminate compounding penalties before market dispatch.
             </p>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', paddingTop: '4px' }}>
+            <div className="flex flex-col sm:flex-row gap-3 pt-1">
               <button
-                className="btn"
+                className="btn w-full sm:w-auto px-6 py-3 text-[0.95rem] gap-2 justify-center"
                 onClick={() => navigate('/scan')}
-                style={{ padding: '12px 24px', fontSize: '0.95rem', gap: '8px' }}
               >
-                <Scan size={18} style={{ color: '#E3F0A3' }} />
+                <Scan size={18} className="text-[#E3F0A3]" />
                 Launch Instant Artwork Audit
               </button>
               <button
-                className="btn btn-secondary"
+                className="btn btn-secondary w-full sm:w-auto px-6 py-3 text-[0.95rem] gap-2 justify-center"
                 onClick={() => navigate('/dashboard')}
-                style={{ padding: '12px 22px', fontSize: '0.95rem', gap: '8px' }}
               >
                 <Activity size={17} />
                 View Control Center
@@ -227,34 +170,18 @@ const Home = () => {
             </div>
 
             {/* Metric tiles */}
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(4,1fr)',
-              gap: '12px', paddingTop: '8px',
-            }}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
               {[
                 { value: 4.2, suffix: 'M+', label: 'SKUs Audited',        color: 'var(--primary)' },
                 { value: 99.84, suffix: '%', label: 'Statutory Accuracy', color: 'var(--success)' },
                 { value: 18.4, prefix: '₹', suffix: 'Cr', label: 'Penalties Prevented', color: 'var(--primary)' },
                 { value: 1.4, prefix: '< ', suffix: 's', label: 'Inference Latency',   color: 'var(--text-muted)' },
               ].map(m => (
-                <div key={m.label} style={{
-                  padding: '14px', borderRadius: '12px',
-                  background: 'rgba(255,255,255,0.85)',
-                  border: '1px solid rgba(186,219,162,0.7)',
-                  backdropFilter: 'blur(10px)',
-                  boxShadow: 'var(--shadow-1)',
-                }}>
-                  <div style={{
-                    fontFamily: 'var(--font-display)', fontSize: '1.6rem', fontWeight: 700,
-                    letterSpacing: '-0.02em', color: m.color, lineHeight: 1,
-                  }}>
+                <div key={m.label} className="p-3.5 rounded-xl bg-white/85 border border-[rgba(186,219,162,0.7)] backdrop-blur-md shadow-[var(--shadow-1)]">
+                  <div className="font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight leading-none" style={{ color: m.color }}>
                     <AnimatedCounter end={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </div>
-                  <div style={{
-                    fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 700,
-                    letterSpacing: '0.07em', textTransform: 'uppercase',
-                    color: 'var(--text-muted)', marginTop: '5px',
-                  }}>
+                  <div className="font-[family-name:var(--font-body)] text-[9px] font-bold tracking-widest uppercase text-[var(--text-muted)] mt-1.5">
                     {m.label}
                   </div>
                 </div>
@@ -263,28 +190,12 @@ const Home = () => {
           </div>
 
           {/* Right column – Live Watchdog widget */}
-          <div style={{
-            background: 'rgba(255,255,255,0.95)',
-            border: '1px solid rgba(186,219,162,0.8)',
-            borderRadius: '16px',
-            padding: '24px',
-            boxShadow: 'var(--shadow-2)',
-            backdropFilter: 'blur(20px)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '18px',
-          }}>
+          <div className="bg-white/95 border border-[rgba(186,219,162,0.8)] rounded-2xl p-5 md:p-6 shadow-[var(--shadow-2)] backdrop-blur-xl flex flex-col gap-4">
             {/* Card header */}
-            <div style={{
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              paddingBottom: '14px', borderBottom: '1px solid rgba(186,219,162,0.5)',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pb-3.5 border-b border-[rgba(186,219,162,0.5)]">
+              <div className="flex items-center gap-2">
                 <ShieldCheck size={20} color="var(--primary)" />
-                <span style={{
-                  fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 600,
-                  color: 'var(--primary)', letterSpacing: '-0.01em',
-                }}>
+                <span className="font-[family-name:var(--font-display)] text-base font-semibold text-[var(--primary)] tracking-tight">
                   LMPC Statutory Watchdog
                 </span>
               </div>
@@ -292,75 +203,52 @@ const Home = () => {
             </div>
 
             {/* Font height calculator */}
-            <div style={{
-              background: 'var(--surface-low)', border: '1px solid rgba(186,219,162,0.6)',
-              borderRadius: '10px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px',
-            }}>
-              <div style={{
-                fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 700,
-                letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)',
-              }}>
+            <div className="bg-[var(--surface-low)] border border-[rgba(186,219,162,0.6)] rounded-xl p-4 flex flex-col gap-3">
+              <div className="font-[family-name:var(--font-body)] text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">
                 Minimum Font Height Calculator (Rule 7)
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <div>
                   <label className="form-label">PDP Area (cm²)</label>
                   <input
-                    className="premium-input"
+                    className="premium-input w-full"
                     type="number" defaultValue={180} min={10} max={2500}
-                    style={{ width: '100%' }}
                   />
                 </div>
                 <div>
                   <label className="form-label">Net Weight / Vol</label>
                   <input
-                    className="premium-input"
+                    className="premium-input w-full"
                     type="text" defaultValue="500 g"
-                    style={{ width: '100%' }}
                   />
                 </div>
               </div>
-              <div style={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                padding: '10px 14px', borderRadius: '8px',
-                background: 'var(--surface-card)', border: '1px solid rgba(186,219,162,0.5)',
-              }}>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+              <div className="flex justify-between items-center px-3.5 py-2.5 rounded-lg bg-[var(--surface-card)] border border-[rgba(186,219,162,0.5)] mt-1">
+                <span className="font-[family-name:var(--font-body)] text-[0.85rem] text-[var(--text-secondary)] font-medium">
                   Required Font Height:
                 </span>
-                <span style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.875rem', fontWeight: 700,
-                  color: 'var(--primary)', background: 'rgba(227,240,163,0.6)',
-                  padding: '3px 10px', borderRadius: '6px',
-                }}>
+                <span className="font-[family-name:var(--font-mono)] text-sm font-bold text-[var(--primary)] bg-[rgba(227,240,163,0.6)] px-2.5 py-1 rounded-md">
                   ≥ 4.0 mm
                 </span>
               </div>
             </div>
 
             {/* Warning notice */}
-            <div style={{
-              display: 'flex', gap: '10px', padding: '12px 14px',
-              borderRadius: '10px', background: '#FFFBEB',
-              border: '1px solid #FDE68A', alignItems: 'flex-start',
-            }}>
-              <AlertTriangle size={16} color="#B45309" style={{ flexShrink: 0, marginTop: '1px' }} />
+            <div className="flex gap-2.5 px-3.5 py-3 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] items-start">
+              <AlertTriangle size={16} color="#B45309" className="shrink-0 mt-0.5" />
               <div>
-                <div style={{
-                  fontFamily: 'var(--font-display)', fontSize: '0.875rem', fontWeight: 600,
-                  color: '#78350F', marginBottom: '3px',
-                }}>
+                <div className="font-[family-name:var(--font-display)] text-[0.875rem] font-semibold text-[#78350F] mb-1">
                   Section 36 Compliance Warning
                 </div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: '#92400E', lineHeight: 1.55 }}>
+                <p className="font-[family-name:var(--font-body)] text-xs text-[#92400E] leading-relaxed m-0">
                   Non-compliant declarations attract fines up to ₹25,000 for the first offence
                   and mandatory packaging seizure.
                 </p>
               </div>
             </div>
 
-            <button className="btn" onClick={() => navigate('/scan')} style={{ justifyContent: 'center' }}>
-              <Scan size={16} style={{ color: '#E3F0A3' }} />
+            <button className="btn justify-center w-full" onClick={() => navigate('/scan')}>
+              <Scan size={16} className="text-[#E3F0A3]" />
               Validate My Packaging Now
             </button>
           </div>
@@ -368,68 +256,50 @@ const Home = () => {
       </section>
 
       {/* ═══ INTERACTIVE PREVIEW ═══════════════════════════ */}
-      <section style={{ marginTop: '16px' }} className="animate-fade-in">
-        <div style={{ marginBottom: '28px' }}>
-          <div className="section-label" style={{ marginBottom: '8px' }}>Interactive Label Inspection Canvas</div>
-          <h2 style={{
-            fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 700,
-            color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '8px',
-          }}>
+      <section className="mt-8 md:mt-12 animate-fade-in">
+        <div className="mb-7 md:text-center text-left">
+          <div className="section-label mb-2">Interactive Label Inspection Canvas</div>
+          <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-bold text-[var(--text-primary)] tracking-tight mb-2">
             See Compliance Analysis in Action
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '520px', lineHeight: 1.6 }}>
+          <p className="text-[var(--text-secondary)] text-sm md:text-[0.9rem] max-w-lg md:mx-auto leading-relaxed">
             Switch between packaging scenarios below to preview how the AI engine flags violations in real time.
           </p>
         </div>
 
-        <div className="glass-card" style={{
-          display: 'grid', gridTemplateColumns: '1fr 300px', gap: '0', padding: '0', overflow: 'hidden',
-        }}>
+        <div className="glass-card grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-0 p-0 overflow-hidden">
           {/* Preview area */}
-          <div style={{ padding: '24px', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="p-4 md:p-6 border-b lg:border-b-0 lg:border-r border-[var(--border)] flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <select
-                className="premium-input"
+                className="premium-input w-full sm:w-64"
                 value={selectedPreset}
                 onChange={e => setSelectedPreset(e.target.value as keyof typeof presets)}
-                style={{ width: '260px' }}
               >
                 {Object.entries(presets).map(([k, v]) => (
                   <option key={k} value={k}>{v.label}</option>
                 ))}
               </select>
-              <button className="btn btn-secondary" onClick={() => navigate('/scan')} style={{ fontSize: '0.82rem', padding: '8px 16px' }}>
+              <button className="btn btn-secondary text-[0.82rem] px-4 py-2 w-full sm:w-auto justify-center" onClick={() => navigate('/scan')}>
                 Test Your Own Packaging
               </button>
             </div>
 
-            <div style={{
-              position: 'relative', width: '100%', height: '360px',
-              borderRadius: '12px', overflow: 'hidden',
-              border: '1px solid var(--border-strong)',
-            }}>
-              <div style={{
-                width: '100%', height: '100%',
-                background: `linear-gradient(rgba(14,42,27,0.45),rgba(14,42,27,0.45)), url(${preset.image})`,
-                backgroundSize: 'cover', backgroundPosition: 'center',
-              }} />
+            <div className="relative w-full h-64 md:h-[360px] rounded-xl overflow-hidden border border-[var(--border-strong)]">
+              <div 
+                className="w-full h-full bg-cover bg-center"
+                style={{ backgroundImage: `linear-gradient(rgba(14,42,27,0.45),rgba(14,42,27,0.45)), url(${preset.image})` }}
+              />
               {preset.boxes.map(box => (
-                <div key={box.id} style={{
-                  position: 'absolute',
+                <div key={box.id} className="absolute border-2 rounded flex items-start p-0.5 md:p-1 transition-all duration-300 ease-in-out" style={{
                   top: `${box.top}%`, left: `${box.left}%`,
                   width: `${box.width}%`, height: `${box.height}%`,
-                  border: `2px solid ${box.status === 'COMPLIANT' ? 'var(--accent)' : '#EF4444'}`,
+                  borderColor: box.status === 'COMPLIANT' ? 'var(--accent)' : '#EF4444',
                   backgroundColor: box.status === 'COMPLIANT' ? 'rgba(66,214,116,0.12)' : 'rgba(239,68,68,0.12)',
-                  borderRadius: '4px',
-                  display: 'flex', alignItems: 'flex-start',
-                  padding: '3px', transition: 'all 0.35s ease',
                 }}>
-                  <span style={{
+                  <span className="text-[7px] md:text-[9px] font-[family-name:var(--font-body)] font-bold px-1 py-0.5 md:px-1.5 md:py-0.5 rounded whitespace-nowrap tracking-wider" style={{
                     background: box.status === 'COMPLIANT' ? 'var(--accent)' : '#EF4444',
                     color: box.status === 'COMPLIANT' ? 'var(--primary)' : '#fff',
-                    fontSize: '9px', fontFamily: 'var(--font-body)', fontWeight: 700,
-                    padding: '2px 6px', borderRadius: '3px', whiteSpace: 'nowrap',
-                    letterSpacing: '0.02em',
                   }}>
                     {box.label}
                   </span>
@@ -439,28 +309,22 @@ const Home = () => {
           </div>
 
           {/* Analysis sidebar */}
-          <div style={{ padding: '24px', background: 'var(--surface-low)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h3 style={{
-              fontFamily: 'var(--font-body)', fontSize: '1rem', fontWeight: 700,
-              display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)',
-            }}>
-              <ShieldCheck size={18} color={preset.status === 'COMPLIANT' ? 'var(--success)' : 'var(--danger)'} />
+          <div className="p-4 md:p-6 bg-[var(--surface-low)] flex flex-col gap-4">
+            <h3 className="font-[family-name:var(--font-body)] text-base font-bold flex items-center gap-2 text-[var(--text-primary)]">
+              <ShieldCheck size={18} className={preset.status === 'COMPLIANT' ? 'text-[var(--success)]' : 'text-[var(--danger)]'} />
               Analysis Results
             </h3>
 
             {/* Score */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div style={{
-                width: '72px', height: '72px', borderRadius: '50%',
-                border: `4px solid ${preset.status === 'COMPLIANT' ? 'var(--accent)' : '#EF4444'}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '1.4rem', fontFamily: 'var(--font-display)', fontWeight: 700,
+            <div className="flex items-center gap-3.5">
+              <div className="w-16 h-16 md:w-[72px] md:h-[72px] rounded-full border-4 flex items-center justify-center text-xl md:text-[1.4rem] font-[family-name:var(--font-display)] font-bold" style={{
+                borderColor: preset.status === 'COMPLIANT' ? 'var(--accent)' : '#EF4444',
                 color: preset.status === 'COMPLIANT' ? 'var(--success)' : 'var(--danger)',
               }}>
                 {preset.score}
               </div>
               <div>
-                <div style={{ fontSize: '11px', fontFamily: 'var(--font-body)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-muted)', marginBottom: '5px' }}>
+                <div className="text-[10px] md:text-[11px] font-[family-name:var(--font-body)] font-bold uppercase tracking-widest text-[var(--text-muted)] mb-1">
                   Compliance Score
                 </div>
                 <span className={`chip ${preset.status === 'COMPLIANT' ? 'chip-success' : 'chip-danger'}`}>
@@ -469,28 +333,19 @@ const Home = () => {
               </div>
             </div>
 
-            <div style={{ height: '1px', background: 'var(--border)' }} />
+            <div className="h-px bg-[var(--border)]" />
 
             {/* Rule results */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className="flex flex-col gap-2">
               {preset.boxes.map(box => (
-                <div key={box.id} style={{
-                  display: 'flex', alignItems: 'center', gap: '9px',
-                  padding: '10px 12px', borderRadius: '9px',
-                  background: 'var(--surface-card)', border: '1px solid var(--border)',
-                  boxShadow: 'var(--shadow-1)',
-                }}>
+                <div key={box.id} className="flex items-center gap-2 p-2 md:p-2.5 rounded-lg bg-[var(--surface-card)] border border-[var(--border)] shadow-[var(--shadow-1)]">
                   {box.status === 'COMPLIANT'
-                    ? <CheckCircle size={15} color="var(--success)" />
-                    : <AlertTriangle size={15} color="var(--danger)" />}
-                  <span style={{
-                    flex: 1, fontSize: '0.82rem', fontFamily: 'var(--font-body)',
-                    fontWeight: 500, color: 'var(--text-primary)',
-                  }}>
+                    ? <CheckCircle size={15} className="text-[var(--success)] shrink-0" />
+                    : <AlertTriangle size={15} className="text-[var(--danger)] shrink-0" />}
+                  <span className="flex-1 text-xs md:text-[0.82rem] font-[family-name:var(--font-body)] font-medium text-[var(--text-primary)] truncate">
                     {box.label.split(':')[0]}
                   </span>
-                  <span className={`chip ${box.status === 'COMPLIANT' ? 'chip-success' : 'chip-danger'}`}
-                    style={{ fontSize: '9px', padding: '3px 8px' }}>
+                  <span className={`chip ${box.status === 'COMPLIANT' ? 'chip-success' : 'chip-danger'} text-[9px] px-2 py-0.5`}>
                     {box.status === 'COMPLIANT' ? 'Pass' : 'Fail'}
                   </span>
                 </div>
@@ -501,24 +356,18 @@ const Home = () => {
       </section>
 
       {/* ═══ FEATURE CARDS ═══════════════════════════════════ */}
-      <section style={{ marginTop: '72px' }} className="animate-fade-in">
-        <div style={{ marginBottom: '36px', textAlign: 'center' }}>
-          <div className="section-label" style={{ marginBottom: '8px' }}>Platform Capabilities</div>
-          <h2 style={{
-            fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 700,
-            letterSpacing: '-0.02em', color: 'var(--text-primary)',
-          }}>
+      <section className="mt-12 md:mt-18 animate-fade-in">
+        <div className="mb-7 md:mb-9 md:text-center text-left">
+          <div className="section-label mb-2">Platform Capabilities</div>
+          <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-bold tracking-tight text-[var(--text-primary)]">
             Architected for Zero Packaging Prosecutions
           </h2>
-          <p style={{
-            color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '480px',
-            margin: '10px auto 0', lineHeight: 1.65,
-          }}>
+          <p className="text-[var(--text-secondary)] text-sm md:text-[0.9rem] max-w-lg md:mx-auto mt-2.5 leading-relaxed">
             Every module resolves a specific compliance gap, packages inspection failures, and drives measurable risk reduction.
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px,1fr))', gap: '20px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <FeatureCard
             icon={Layers} iconColor="var(--info)" iconBg="var(--info-bg)"
             title="Font Size Compliance"

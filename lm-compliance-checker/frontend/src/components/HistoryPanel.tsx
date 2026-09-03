@@ -33,18 +33,18 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({ onSelectReport, refr
   }, [refreshTrigger]);
 
   return (
-    <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', maxHeight: 'calc(100vh - 120px)', overflowY: 'auto' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px' }}>
-        <History size={20} color="var(--accent-primary)" />
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Scan History</h3>
+    <div className="glass-panel flex flex-col gap-4 h-full max-h-[calc(100vh-120px)] overflow-y-auto p-4 md:p-5">
+      <div className="flex items-center gap-2 border-b border-[var(--border)] pb-4">
+        <History size={20} className="text-[var(--accent)]" />
+        <h3 className="text-[1.1rem] font-semibold text-[var(--text-primary)] m-0">Scan History</h3>
       </div>
       
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '32px' }}>
+        <div className="flex justify-center p-8">
           <div className="loader"></div>
         </div>
       ) : reports.length === 0 ? (
-        <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '32px 0', fontSize: '0.9rem' }}>No past scans found.</p>
+        <p className="text-[var(--text-secondary)] text-center py-8 text-[0.9rem] m-0">No past scans found.</p>
       ) : (
         <div className="history-list">
           {reports.map((report) => {
@@ -55,26 +55,26 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({ onSelectReport, refr
                 className="history-card"
                 onClick={() => onSelectReport(report.upload_id)}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
-                    <div style={{ padding: '6px', background: 'var(--bg-primary)', borderRadius: '6px' }}>
-                      <FileImage size={16} color="var(--text-secondary)" />
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <div className="p-1.5 bg-[var(--surface-high)] rounded-md shrink-0">
+                      <FileImage size={16} className="text-[var(--text-secondary)]" />
                     </div>
-                    <span style={{ fontWeight: 600, fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '140px', color: 'var(--text-primary)' }}>
+                    <span className="font-semibold text-[0.9rem] whitespace-nowrap overflow-hidden text-ellipsis max-w-[140px] text-[var(--text-primary)]">
                       {report.original_filename}
                     </span>
                   </div>
-                  <div style={{ padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700, background: isPass ? 'var(--success-bg)' : 'var(--danger-bg)', color: isPass ? 'var(--success)' : 'var(--danger)' }}>
+                  <div className={`px-2 py-1 rounded text-[0.7rem] font-bold ${isPass ? 'bg-[var(--success-bg)] text-[var(--success)]' : 'bg-[var(--danger-bg)] text-[var(--danger)]'}`}>
                     {isPass ? 'PASS' : 'FAIL'}
                   </div>
                 </div>
                 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '4px' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div className="flex justify-between items-center text-[var(--text-secondary)] text-[0.8rem] mt-1">
+                  <span className="flex items-center gap-1">
                     <Clock size={12} />
                     {new Date(report.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </span>
-                  <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{report.compliance_score}%</span>
+                  <span className="font-medium text-[var(--text-primary)]">{report.compliance_score}%</span>
                 </div>
               </div>
             );

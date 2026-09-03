@@ -33,61 +33,33 @@ function ScoreCard({
   icon: React.ElementType; accentColor: string; loading?: boolean;
 }) {
   return (
-    <div className="glass-card" style={{
-      padding: '24px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '10px',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
+    <div className="glass-card flex flex-col gap-2.5 p-5 relative overflow-hidden">
       {/* Corner accent glow */}
-      <div style={{
-        position: 'absolute', top: 0, right: 0, width: '100px', height: '100px',
-        borderRadius: '0 16px 0 100%',
-        background: `${accentColor}14`,
-        zIndex: 0,
-      }} />
+      <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-full z-0" style={{ background: `${accentColor}14` }} />
 
       {/* Header row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 1 }}>
-        <span style={{
-          fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700,
-          textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-muted)',
-        }}>
+      <div className="flex justify-between items-start z-10">
+        <span className="font-[family-name:var(--font-body)] text-[11px] font-bold uppercase tracking-widest text-[var(--text-muted)]">
           {title}
         </span>
-        <div style={{
-          background: `${accentColor}18`,
-          borderRadius: '10px', padding: '8px',
-          border: `1px solid ${accentColor}30`,
-        }}>
+        <div className="p-2 rounded-lg border" style={{ background: `${accentColor}18`, borderColor: `${accentColor}30` }}>
           <Icon size={16} color={accentColor} />
         </div>
       </div>
 
       {/* Value */}
-      <div style={{ zIndex: 1 }}>
+      <div className="z-10 mt-1">
         {loading ? (
-          <div style={{
-            height: '38px', background: 'var(--surface-high)',
-            borderRadius: '8px', width: '55%', animation: 'pulse 1.5s infinite',
-          }} />
+          <div className="h-9 bg-[var(--surface-high)] rounded-lg w-1/2 animate-pulse" />
         ) : (
-          <span style={{
-            fontFamily: 'var(--font-display)', fontSize: '2.1rem', fontWeight: 700,
-            color: 'var(--text-primary)', letterSpacing: '-0.025em', lineHeight: 1,
-          }}>
+          <span className="font-[family-name:var(--font-display)] text-3xl md:text-[2.1rem] font-bold text-[var(--text-primary)] tracking-tight leading-none">
             {value}
           </span>
         )}
       </div>
 
       {sub && (
-        <span style={{
-          fontFamily: 'var(--font-body)', fontSize: '0.78rem',
-          color: 'var(--text-muted)', zIndex: 1,
-        }}>
+        <span className="font-[family-name:var(--font-body)] text-[0.78rem] text-[var(--text-muted)] z-10">
           {sub}
         </span>
       )}
@@ -162,54 +134,44 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="page-enter" style={{ display: 'flex', flexDirection: 'column', gap: '28px', paddingBottom: '48px' }}>
+    <div className="page-enter flex flex-col gap-7 pb-12">
 
       {/* ── Header ── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <div className="section-label" style={{ marginBottom: '6px' }}>Enterprise Overview</div>
-          <h1 style={{
-            fontFamily: 'var(--font-display)', fontSize: '1.9rem', fontWeight: 700,
-            letterSpacing: '-0.025em', color: 'var(--text-primary)', margin: 0,
-          }}>
+          <div className="section-label mb-1.5">Enterprise Overview</div>
+          <h1 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-bold tracking-tight text-[var(--text-primary)] m-0">
             Control Center
           </h1>
-          <p style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)', fontSize: '0.875rem', margin: '5px 0 0' }}>
+          <p className="font-[family-name:var(--font-body)] text-[var(--text-muted)] text-xs md:text-[0.875rem] mt-1 mb-0">
             Legal Metrology Compliance — Aggregated Intelligence Dashboard
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <select value={days} onChange={e => setDays(Number(e.target.value))} className="premium-input">
+        <div className="flex gap-2.5 items-center w-full sm:w-auto">
+          <select value={days} onChange={e => setDays(Number(e.target.value))} className="premium-input flex-1 sm:flex-none">
             <option value={7}>Last 7 days</option>
             <option value={30}>Last 30 days</option>
             <option value={90}>Last 90 days</option>
           </select>
           <button
             onClick={loadData}
-            className="btn btn-secondary"
-            style={{ gap: '7px', padding: '9px 16px', fontSize: '0.85rem' }}
+            className="btn btn-secondary px-4 py-2 text-sm gap-2 whitespace-nowrap"
           >
-            <RefreshCw size={14} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
-            Refresh
+            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+            <span className="hidden sm:inline">Refresh</span>
           </button>
         </div>
       </div>
 
       {/* Error */}
       {error && (
-        <div style={{
-          padding: '14px 18px', background: 'var(--danger-bg)',
-          border: '1px solid var(--danger-border)', borderRadius: '12px',
-          color: 'var(--danger)', fontSize: '0.88rem',
-          display: 'flex', alignItems: 'center', gap: '8px',
-          fontFamily: 'var(--font-body)',
-        }}>
+        <div className="px-4 py-3 bg-[var(--danger-bg)] border border-[var(--danger-border)] rounded-xl text-[var(--danger)] text-sm flex items-center gap-2 font-[family-name:var(--font-body)]">
           <AlertTriangle size={16} /> {error}
         </div>
       )}
 
       {/* ── KPI Cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px,1fr))', gap: '18px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4.5">
         <ScoreCard title="Total Audits"     value={s?.total_scans ?? '—'}               icon={Layers}      accentColor="#133820" loading={loading} sub={`Last ${days} days`} />
         <ScoreCard title="Avg Compliance"   value={s ? `${s.avg_compliance_score}%` : '—'} icon={TrendingUp}  accentColor={CHART_GREEN} loading={loading} sub="Global average score" />
         <ScoreCard title="Compliant"        value={s?.compliant_count ?? '—'}            icon={CheckCircle} accentColor={CHART_GREEN} loading={loading} sub="Score ≥ 80%" />
@@ -217,18 +179,15 @@ export default function Dashboard() {
       </div>
 
       {/* ── Charts Row ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '18px' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4.5">
 
         {/* Compliance trend */}
-        <div className="glass-card" style={{ padding: '24px' }}>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '1rem',
-            color: 'var(--text-primary)', marginBottom: '20px', letterSpacing: '-0.01em',
-          }}>
+        <div className="glass-card lg:col-span-2 p-5 md:p-6">
+          <h3 className="font-[family-name:var(--font-body)] font-bold text-base text-[var(--text-primary)] mb-5 tracking-tight">
             Compliance Trend
           </h3>
           {loading ? (
-            <div style={{ height: '250px', background: 'var(--surface-high)', borderRadius: '8px', animation: 'pulse 1.5s infinite' }} />
+            <div className="h-[250px] bg-[var(--surface-high)] rounded-lg animate-pulse" />
           ) : (
             <ResponsiveContainer width="100%" height={250}>
               <AreaChart data={stats?.daily_trend || []}>
@@ -241,13 +200,13 @@ export default function Dashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(186,219,162,0.4)" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 11, fill: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}
-                  tickFormatter={d => d.slice(5)}
+                  tick={{ fontSize: 10, fill: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}
+                  tickFormatter={d => window.innerWidth < 640 ? '' : d.slice(5)}
                   tickMargin={10} axisLine={false} tickLine={false}
                 />
                 <YAxis
                   domain={[0, 100]}
-                  tick={{ fontSize: 11, fill: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}
+                  tick={{ fontSize: 10, fill: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}
                   axisLine={false} tickLine={false} tickMargin={10}
                 />
                 <Tooltip
@@ -259,7 +218,7 @@ export default function Dashboard() {
                   type="monotone" dataKey="avg_score"
                   stroke={CHART_GREEN} strokeWidth={2.5}
                   fill="url(#scoreGrad)"
-                  dot={{ r: 3.5, fill: CHART_GREEN, strokeWidth: 2, stroke: '#fff' }}
+                  dot={{ r: 3, fill: CHART_GREEN, strokeWidth: 2, stroke: '#fff' }}
                   activeDot={{ r: 5, fill: CHART_GREEN, stroke: '#fff', strokeWidth: 2 }}
                 />
               </AreaChart>
@@ -268,15 +227,12 @@ export default function Dashboard() {
         </div>
 
         {/* Status donut */}
-        <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '1rem',
-            color: 'var(--text-primary)', marginBottom: '20px', letterSpacing: '-0.01em',
-          }}>
+        <div className="glass-card p-5 md:p-6 flex flex-col">
+          <h3 className="font-[family-name:var(--font-body)] font-bold text-base text-[var(--text-primary)] mb-5 tracking-tight">
             Status Breakdown
           </h3>
           {loading ? (
-            <div style={{ flex: 1, background: 'var(--surface-high)', borderRadius: '8px', animation: 'pulse 1.5s infinite', minHeight: '200px' }} />
+            <div className="flex-1 bg-[var(--surface-high)] rounded-lg animate-pulse min-h-[200px]" />
           ) : (
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
@@ -290,7 +246,7 @@ export default function Dashboard() {
                 <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: 'var(--text-primary)' }} />
                 <Legend
                   formatter={v => (
-                    <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontFamily: 'var(--font-body)', fontWeight: 500 }}>{v}</span>
+                    <span className="text-xs text-[var(--text-secondary)] font-[family-name:var(--font-body)] font-medium ml-1">{v}</span>
                   )}
                   verticalAlign="bottom" height={36} iconType="circle"
                 />
@@ -301,42 +257,37 @@ export default function Dashboard() {
       </div>
 
       {/* ── Audit History Table ── */}
-      <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="glass-card p-5 md:p-6 flex flex-col gap-5 overflow-hidden">
 
         {/* Table controls */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
           <div>
-            <h3 style={{
-              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '1.05rem',
-              color: 'var(--text-primary)', marginBottom: '3px', letterSpacing: '-0.01em',
-            }}>
+            <h3 className="font-[family-name:var(--font-body)] font-bold text-[1.05rem] text-[var(--text-primary)] mb-1 tracking-tight">
               Audit History
             </h3>
-            <p style={{ fontFamily: 'var(--font-body)', margin: 0, fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            <p className="font-[family-name:var(--font-body)] text-xs text-[var(--text-muted)] m-0">
               Detailed log of all processed compliance scans
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="flex flex-wrap gap-2.5 items-center w-full xl:w-auto">
             {/* Search */}
-            <div style={{ position: 'relative' }}>
-              <Search size={14} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+            <div className="relative flex-1 xl:flex-none">
+              <Search size={14} color="var(--text-muted)" className="absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text" value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search audits..."
-                className="premium-input"
-                style={{ paddingLeft: '34px', width: '200px' }}
+                className="premium-input pl-8 w-full xl:w-48"
               />
             </div>
 
             {/* Filter pills */}
-            <div className="tab-container" style={{ padding: '3px', gap: '2px' }}>
+            <div className="tab-container p-1 gap-0.5 overflow-x-auto hidden sm:flex">
               {(['all', 'pass', 'warn', 'fail'] as const).map(f => (
                 <button
                   key={f}
                   onClick={() => { setFilterStatus(f); setSkip(0); }}
-                  className={`tab-button ${filterStatus === f ? 'active' : ''}`}
-                  style={{ padding: '5px 12px', fontSize: '0.75rem' }}
+                  className={`tab-button px-3 py-1.5 text-xs ${filterStatus === f ? 'active' : ''}`}
                 >
                   {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
                 </button>
@@ -346,28 +297,27 @@ export default function Dashboard() {
             {/* Export */}
             <button
               onClick={() => api.downloadAllCSV()}
-              className="btn"
-              style={{ padding: '8px 16px', fontSize: '0.82rem', gap: '6px' }}
+              className="btn px-4 py-2 text-sm gap-1.5 sm:ml-auto xl:ml-0"
             >
-              <Download size={14} style={{ color: '#E3F0A3' }} /> Export CSV
+              <Download size={14} className="text-[#E3F0A3]" /> <span className="hidden sm:inline">Export CSV</span>
             </button>
           </div>
         </div>
 
         {/* Table */}
-        <div className="premium-table-container">
+        <div className="premium-table-container overflow-x-auto w-full">
           {loading ? (
-            <div style={{ padding: '56px', textAlign: 'center', color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
-              <RefreshCw size={26} style={{ animation: 'spin 1s linear infinite', margin: '0 auto 14px', display: 'block', color: 'var(--accent)' }} />
-              <p style={{ margin: 0, fontSize: '0.88rem' }}>Loading audits…</p>
+            <div className="p-14 text-center text-[var(--text-muted)] font-[family-name:var(--font-body)]">
+              <RefreshCw size={26} className="animate-spin mx-auto mb-3.5 block text-[var(--accent)]" />
+              <p className="m-0 text-sm">Loading audits…</p>
             </div>
           ) : filteredReports.length === 0 ? (
-            <div style={{ padding: '56px', textAlign: 'center', color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
-              <FileText size={38} style={{ margin: '0 auto 14px', opacity: 0.25, display: 'block' }} />
-              <p style={{ margin: 0, fontSize: '0.9rem' }}>No audit records match your filters.</p>
+            <div className="p-14 text-center text-[var(--text-muted)] font-[family-name:var(--font-body)]">
+              <FileText size={38} className="mx-auto mb-3.5 opacity-25 block" />
+              <p className="m-0 text-sm">No audit records match your filters.</p>
             </div>
           ) : (
-            <table className="premium-table">
+            <table className="premium-table min-w-[700px]">
               <thead>
                 <tr>
                   <th>Audit ID</th>
@@ -375,54 +325,46 @@ export default function Dashboard() {
                   <th>Date</th>
                   <th>Score</th>
                   <th>Distribution</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                  <th className="text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedReports.map(r => (
                   <tr key={r.analysis_id}>
                     <td>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                      <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--text-muted)] font-semibold">
                         #{r.analysis_id}
                       </span>
                     </td>
                     <td>
-                      <div style={{
-                        maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap', fontWeight: 600, color: 'var(--text-primary)',
-                        fontFamily: 'var(--font-body)', fontSize: '0.875rem',
-                      }} title={r.original_filename}>
+                      <div className="max-w-[200px] md:max-w-[240px] truncate font-semibold text-[var(--text-primary)] font-[family-name:var(--font-body)] text-sm" title={r.original_filename}>
                         {r.original_filename}
                       </div>
                     </td>
-                    <td style={{ fontFamily: 'var(--font-body)', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                    <td className="font-[family-name:var(--font-body)] text-xs text-[var(--text-muted)]">
                       {new Date(r.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
                     <td><ScoreBadge score={r.compliance_score} /></td>
                     <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{
-                          display: 'flex', width: '90px', height: '5px',
-                          borderRadius: '3px', overflow: 'hidden', background: 'var(--surface-high)',
-                        }}>
+                      <div className="flex items-center gap-2">
+                        <div className="flex w-20 md:w-[90px] h-1.5 rounded-sm overflow-hidden bg-[var(--surface-high)]">
                           <div style={{ flex: r.passed,  background: CHART_GREEN }} />
                           <div style={{ flex: r.warned,  background: CHART_AMBER }} />
                           <div style={{ flex: r.failed,  background: CHART_RED }} />
                         </div>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
+                        <span className="text-[10px] text-[var(--text-muted)] font-[family-name:var(--font-mono)] font-semibold">
                           {r.passed}/{r.total_rules}
                         </span>
                       </div>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                      <div className="flex gap-2 justify-end">
                         <button
                           onClick={() => api.downloadPDF(r.analysis_id)}
                           title="Download Audit PDF"
-                          className="btn btn-secondary"
-                          style={{ padding: '6px 12px', fontSize: '0.75rem', gap: '5px' }}
+                          className="btn btn-secondary px-2.5 py-1.5 text-xs gap-1"
                         >
-                          <FileCheck size={13} color="var(--success)" /> Report
+                          <FileCheck size={13} className="text-[var(--success)]" /> <span className="hidden sm:inline">Report</span>
                         </button>
                       </div>
                     </td>
@@ -435,23 +377,22 @@ export default function Dashboard() {
 
         {/* Pagination */}
         {!loading && filteredReports.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+            <span className="text-xs text-[var(--text-muted)] font-[family-name:var(--font-body)]">
               Showing{' '}
-              <strong style={{ color: 'var(--text-primary)' }}>{skip + 1}–{Math.min(skip + TABLE_LIMIT, filteredReports.length)}</strong>
+              <strong className="text-[var(--text-primary)]">{skip + 1}–{Math.min(skip + TABLE_LIMIT, filteredReports.length)}</strong>
               {' '}of{' '}
-              <strong style={{ color: 'var(--text-primary)' }}>{filteredReports.length}</strong>
+              <strong className="text-[var(--text-primary)]">{filteredReports.length}</strong>
               {' '}audits
             </span>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="flex gap-2">
               {[
                 { icon: ChevronLeft, onClick: () => setSkip(Math.max(0, skip - TABLE_LIMIT)), disabled: skip === 0 },
                 { icon: ChevronRight, onClick: () => setSkip(skip + TABLE_LIMIT), disabled: skip + TABLE_LIMIT >= filteredReports.length },
               ].map(({ icon: Ic, onClick, disabled }, i) => (
                 <button
                   key={i} onClick={onClick} disabled={disabled}
-                  className="btn btn-secondary"
-                  style={{ padding: '7px 10px', opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'pointer' }}
+                  className={`btn btn-secondary px-2.5 py-1.5 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                   <Ic size={15} />
                 </button>

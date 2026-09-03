@@ -24,167 +24,93 @@ const navItems = [
 export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, isOnline }) => {
   return (
     <aside
+      className={`
+        flex flex-row md:flex-col shrink-0
+        w-full md:w-auto h-auto md:h-full
+        bg-white border-b md:border-b-0 md:border-r border-[rgba(186,219,162,0.7)]
+        overflow-x-auto md:overflow-hidden relative z-10
+        shadow-[0_1px_12px_rgba(27,42,30,0.04)] md:shadow-[1px_0_12px_rgba(27,42,30,0.04)]
+        transition-[width,min-width] duration-300
+      `}
       style={{
-        width: collapsed ? '64px' : '224px',
-        minWidth: collapsed ? '64px' : '224px',
-        background: '#ffffff',
-        borderRight: '1px solid rgba(186,219,162,0.7)',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'width 0.28s cubic-bezier(0.4,0,0.2,1), min-width 0.28s cubic-bezier(0.4,0,0.2,1)',
-        overflow: 'hidden',
-        position: 'relative',
-        zIndex: 10,
-        boxShadow: '1px 0 12px rgba(27,42,30,0.04)',
+        width: typeof window !== 'undefined' && window.innerWidth >= 768 ? (collapsed ? '64px' : '224px') : '100%',
+        minWidth: typeof window !== 'undefined' && window.innerWidth >= 768 ? (collapsed ? '64px' : '224px') : '100%',
       }}
     >
       {/* Brand — clicks navigate to Home */}
       <Link
         to="/"
-        style={{
-          padding: collapsed ? '18px 0' : '18px 16px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          borderBottom: '1px solid rgba(186,219,162,0.55)',
-          minHeight: '74px',
-          justifyContent: collapsed ? 'center' : 'flex-start',
-          background: 'var(--surface-low)',
-          textDecoration: 'none',
-          cursor: 'pointer',
-          transition: 'opacity 0.18s cubic-bezier(0.4,0,0.2,1)',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.opacity = '0.8')}
-        onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+        className={`
+          flex items-center gap-3 shrink-0
+          px-4 md:px-4 py-3 md:py-4
+          border-r md:border-r-0 md:border-b border-[rgba(186,219,162,0.55)]
+          min-w-[120px] md:min-h-[74px] md:min-w-0
+          justify-center md:justify-start
+          bg-[var(--surface-low)] no-underline cursor-pointer
+          hover:opacity-80 transition-opacity
+        `}
         title="Go to Home"
       >
         <img 
           src="/sahi-pack-logo.png" 
           alt="Sahi Pack Logo" 
-          style={{ 
-            height: '38px', 
-            objectFit: 'contain', 
-            transition: 'transform 0.18s',
-            flexShrink: 0
-          }} 
+          className="h-8 md:h-[38px] object-contain shrink-0 transition-transform"
         />
-        {!collapsed && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-            <span style={{
-              fontFamily: 'system-ui, -apple-system, sans-serif',
-              fontSize: '1.25rem',
-              fontWeight: 800,
-              color: 'var(--primary)',
-              letterSpacing: '-0.02em',
-              lineHeight: 1,
-            }}>
-              Sahi Pack
-            </span>
-            <span style={{
-              fontFamily: 'system-ui, -apple-system, sans-serif',
-              fontSize: '9px',
-              fontWeight: 700,
-              color: 'var(--text-secondary)',
-              letterSpacing: '0.04em',
-              textTransform: 'uppercase',
-              lineHeight: 1,
-            }}>
-              Legal Metrology Compliance Platform
-            </span>
-          </div>
-        )}
+        <div className={`flex-col gap-0.5 md:flex hidden ${collapsed ? 'md:hidden' : ''}`}>
+          <span className="font-sans text-lg md:text-xl font-extrabold text-[var(--primary)] tracking-tight leading-none">
+            Sahi Pack
+          </span>
+          <span className="font-sans text-[8px] md:text-[9px] font-bold text-[var(--text-secondary)] tracking-wider uppercase leading-none">
+            Compliance
+          </span>
+        </div>
       </Link>
 
       {/* Nav items */}
-      <nav style={{ flex: 1, padding: '10px 8px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+      <nav className="flex flex-row md:flex-col gap-1 md:gap-0.5 p-2 flex-1 md:flex-none">
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
-            style={({ isActive }) => ({
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: collapsed ? '11px 0' : '10px 12px',
-              justifyContent: collapsed ? 'center' : 'flex-start',
-              borderRadius: '10px',
-              textDecoration: 'none',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.875rem',
-              fontWeight: isActive ? 700 : 500,
-              color: isActive ? '#ffffff' : 'var(--text-secondary)',
-              background: isActive ? 'var(--primary)' : 'transparent',
-              transition: 'all 0.18s cubic-bezier(0.4,0,0.2,1)',
-              whiteSpace: 'nowrap',
-              position: 'relative',
-              boxShadow: isActive ? '0 2px 10px rgba(19,56,32,0.18)' : 'none',
-            })}
+            className={({ isActive }) => `
+              flex items-center gap-2 md:gap-2.5 shrink-0
+              px-3 py-2 md:px-3 md:py-2.5
+              justify-center md:justify-start
+              rounded-lg md:rounded-[10px] no-underline font-[family-name:var(--font-body)]
+              text-sm whitespace-nowrap relative
+              transition-all duration-200
+              ${isActive 
+                ? 'font-bold text-white bg-[var(--primary)] shadow-[0_2px_10px_rgba(19,56,32,0.18)]' 
+                : 'font-medium text-[var(--text-secondary)] bg-transparent hover:bg-[var(--surface-low)]'
+              }
+            `}
           >
             {({ isActive }) => (
               <>
                 <Icon
                   size={17}
-                  style={{
-                    flexShrink: 0,
-                    color: isActive ? '#E3F0A3' : 'var(--text-muted)',
-                    transition: 'color 0.18s',
-                  }}
+                  className={`shrink-0 transition-colors ${isActive ? 'text-[var(--on-primary)]' : 'text-[var(--text-muted)]'}`}
                 />
-                {!collapsed && label}
+                <span className={`block md:hidden ${collapsed ? '' : 'md:block'}`}>
+                  {label}
+                </span>
               </>
             )}
           </NavLink>
         ))}
       </nav>
 
-      {/* Status + collapse */}
-      <div style={{
-        padding: collapsed ? '14px 0' : '14px 16px',
-        borderTop: '1px solid rgba(186,219,162,0.55)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        alignItems: collapsed ? 'center' : 'flex-start',
-        background: 'var(--surface-low)',
-      }}>
+      {/* Status + collapse (hidden on mobile) */}
+      <div className="hidden md:flex flex-col gap-2.5 p-3.5 border-t border-[rgba(186,219,162,0.55)] bg-[var(--surface-low)] items-start mt-auto">
         {!collapsed && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '7px',
-            fontSize: '11px',
-            fontFamily: 'var(--font-body)',
-            fontWeight: 700,
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            color: isOnline ? 'var(--success)' : 'var(--danger)',
-          }}>
+          <div className={`flex items-center gap-1.5 text-[11px] font-[family-name:var(--font-body)] font-bold tracking-wider uppercase ${isOnline ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
             <Activity size={11} />
             {isOnline ? 'API Online' : 'API Offline'}
           </div>
         )}
         <button
           onClick={onToggle}
-          style={{
-            background: 'var(--surface-card)',
-            border: '1px solid var(--border-strong)',
-            borderRadius: '8px',
-            padding: '6px 8px',
-            cursor: 'pointer',
-            color: 'var(--text-muted)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'var(--transition)',
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLButtonElement).style.background = 'var(--surface-high)';
-            (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-accent)';
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLButtonElement).style.background = 'var(--surface-card)';
-            (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-strong)';
-          }}
+          className="bg-[var(--surface-card)] border border-[var(--border-strong)] rounded-lg p-1.5 cursor-pointer text-[var(--text-muted)] flex items-center justify-center transition-colors hover:bg-[var(--surface-high)] hover:border-[var(--border-accent)] w-full"
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}

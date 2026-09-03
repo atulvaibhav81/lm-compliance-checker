@@ -3,8 +3,15 @@
    Legal Metrology AI Compliance Platform
    ═══════════════════════════════════════════════════════ */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
+body {
+  overflow-x: hidden;
+}
 :root {
   /* ── Surface Layers ── */
   --surface:              #f4fbf3;

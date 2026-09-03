@@ -101,21 +101,21 @@ export const UploadPanel: React.FC<UploadPanelProps> = ({ onScan, isScanning }) 
   };
 
   return (
-    <div className="glass-card animate-fade-in" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className="glass-card animate-fade-in flex flex-col gap-5 p-5 md:p-6 w-full">
       
-      <div className="tab-container">
+      <div className="tab-container flex flex-wrap gap-1">
         <button 
-          className={`tab-button ${activeTab === 'upload' ? 'active' : ''}`}
+          className={`tab-button flex-1 sm:flex-none ${activeTab === 'upload' ? 'active' : ''}`}
           onClick={() => setActiveTab('upload')}
         >
-          <ImageIcon size={18} style={{ display: 'inline', marginRight: 8, verticalAlign: 'text-bottom' }} />
+          <ImageIcon size={18} className="inline mr-2 align-text-bottom" />
           File Upload
         </button>
         <button 
-          className={`tab-button ${activeTab === 'camera' ? 'active' : ''}`}
+          className={`tab-button flex-1 sm:flex-none ${activeTab === 'camera' ? 'active' : ''}`}
           onClick={() => { setActiveTab('camera'); startCamera(); }}
         >
-          <Camera size={18} style={{ display: 'inline', marginRight: 8, verticalAlign: 'text-bottom' }} />
+          <Camera size={18} className="inline mr-2 align-text-bottom" />
           Live Camera
         </button>
       </div>
@@ -131,23 +131,22 @@ export const UploadPanel: React.FC<UploadPanelProps> = ({ onScan, isScanning }) 
           <input 
             type="file" 
             id="file-upload" 
-            style={{ display: 'none' }} 
+            className="hidden" 
             accept="image/*"
             onChange={handleChange}
           />
           
           {selectedFile ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-              <div style={{ position: 'relative' }}>
-                <FileImage size={56} className="upload-icon" style={{ transform: 'none' }} />
+            <div className="flex flex-col items-center gap-3">
+              <div className="relative">
+                <FileImage size={56} className="upload-icon !transform-none" />
               </div>
-              <p style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{selectedFile.name}</p>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+              <p className="font-semibold text-[var(--text-primary)] text-center break-all">{selectedFile.name}</p>
+              <p className="text-sm text-[var(--text-secondary)]">
                 {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
               </p>
               <button 
-                className="btn btn-secondary" 
-                style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: 8 }}
+                className="btn btn-secondary mt-4 flex items-center gap-2"
                 onClick={() => setSelectedFile(null)}
                 disabled={isScanning}
               >
@@ -155,11 +154,11 @@ export const UploadPanel: React.FC<UploadPanelProps> = ({ onScan, isScanning }) 
               </button>
             </div>
           ) : (
-            <label htmlFor="file-upload" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
+            <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center gap-3.5">
               <UploadCloud size={52} className="upload-icon" />
               <div>
-                <h3 style={{ fontFamily: 'var(--font-body)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '5px', textAlign: 'center' }}>Drag &amp; Drop Packaging Image Here</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', textAlign: 'center' }}>or click to browse · JPEG, PNG, WebP · Max 10 MB</p>
+                <h3 className="font-[family-name:var(--font-body)] text-base md:text-[1.1rem] font-bold text-[var(--text-primary)] mb-1 text-center">Drag & Drop Packaging Image Here</h3>
+                <p className="text-[var(--text-muted)] text-xs md:text-sm text-center px-4">or click to browse · JPEG, PNG, WebP · Max 10 MB</p>
               </div>
             </label>
           )}
@@ -182,33 +181,31 @@ export const UploadPanel: React.FC<UploadPanelProps> = ({ onScan, isScanning }) 
       )}
 
       {errorMsg && (
-        <div style={{ color: 'var(--danger)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', textAlign: 'center', background: 'var(--danger-bg)', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--danger-border)' }}>
+        <div className="text-[var(--danger)] font-[family-name:var(--font-body)] text-sm text-center bg-[var(--danger-bg)] py-3 px-4 rounded-[var(--radius-md)] border border-[var(--danger-border)]">
           {errorMsg}
         </div>
       )}
 
       <button
-        className="btn"
+        className="btn justify-center w-full py-3.5 text-base mt-2"
         onClick={() => selectedFile && onScan(selectedFile)}
         disabled={!selectedFile || isScanning}
-        style={{ padding: '14px 24px', fontSize: '1rem', justifyContent: 'center', marginTop: '8px' }}
       >
         {isScanning ? (
           <><div className="loader"></div> Analysing Integrity…</>
         ) : (
-          <><ShieldCheck size={18} style={{ color: '#E3F0A3' }} /> Scan Package Label</>
+          <><ShieldCheck size={18} className="text-[#E3F0A3]" /> Scan Package Label</>
         )}
       </button>
 
       {/* Demo Mode */}
-      <div style={{ marginTop: '24px', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '14px', textAlign: 'center', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div className="mt-6 border-t border-[var(--border)] pt-5">
+        <p className="font-[family-name:var(--font-body)] text-[11px] font-bold text-[var(--text-muted)] mb-3.5 text-center tracking-widest uppercase">
           Demo Sample Data
         </p>
-        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button 
-            className="btn btn-secondary" 
-            style={{ flex: 1, fontSize: '0.9rem' }}
+            className="btn btn-secondary flex-1 text-sm justify-center py-2.5" 
             disabled={isScanning}
             onClick={async () => {
               const res = await fetch('/samples/sample_1_perfect.png');
@@ -221,8 +218,7 @@ export const UploadPanel: React.FC<UploadPanelProps> = ({ onScan, isScanning }) 
             Load Perfect Label
           </button>
           <button 
-            className="btn btn-secondary" 
-            style={{ flex: 1, fontSize: '0.9rem' }}
+            className="btn btn-secondary flex-1 text-sm justify-center py-2.5" 
             disabled={isScanning}
             onClick={async () => {
               const res = await fetch('/samples/sample_2_failed.png');

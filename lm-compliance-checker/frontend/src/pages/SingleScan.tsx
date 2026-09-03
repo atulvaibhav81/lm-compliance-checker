@@ -1,5 +1,5 @@
 /* ─── Single Scan Page wrapper ─────────────────────────────────────────── */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { UploadPanel } from '../components/UploadPanel';
 import { AnalysisPanel } from '../components/AnalysisPanel';
 import { api } from '../services/api';
@@ -25,16 +25,16 @@ export default function SingleScan() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className="flex flex-col gap-5 page-enter w-full max-w-4xl mx-auto">
       <div>
-        <h1 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0 }}>Single Scan</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: '4px 0 0' }}>
+        <h1 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-bold m-0 tracking-tight text-[var(--text-primary)]">Single Scan</h1>
+        <p className="font-[family-name:var(--font-body)] text-[var(--text-muted)] text-sm mt-1 mb-0">
           Upload one label image for instant compliance analysis
         </p>
       </div>
 
       {error && (
-        <div style={{ padding: '12px 16px', background: 'rgba(239,68,68,0.12)', color: 'var(--danger)', borderRadius: '8px', border: '1px solid var(--danger)', fontSize: '0.85rem' }}>
+        <div className="px-4 py-3 bg-[var(--danger-bg)] text-[var(--danger)] rounded-xl border border-[var(--danger-border)] text-sm font-[family-name:var(--font-body)]">
           {error}
         </div>
       )}
@@ -42,23 +42,18 @@ export default function SingleScan() {
       {!currentAnalysis && <UploadPanel onScan={handleScan} isScanning={isScanning} />}
 
       {currentAnalysis && (
-        <>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 600, margin: 0 }}>Analysis Results</h2>
-            <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <h2 className="font-[family-name:var(--font-body)] text-xl font-bold m-0 text-[var(--text-primary)]">Analysis Results</h2>
+            <div className="flex flex-wrap gap-2">
               <button
+                className="btn btn-secondary px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--accent-primary)] gap-1.5"
                 onClick={() => api.downloadPDF(currentAnalysis.analysis_id)}
-                style={{
-                  padding: '7px 14px', background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)',
-                  color: 'var(--accent-primary)', borderRadius: '8px', cursor: 'pointer', fontSize: '0.83rem',
-                  fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px',
-                }}
               >
                 ↓ Download PDF
               </button>
               <button
-                className="btn"
-                style={{ padding: '7px 14px', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                className="btn px-3 py-1.5 text-xs sm:text-sm"
                 onClick={() => setCurrentAnalysis(null)}
               >
                 New Scan
@@ -66,7 +61,7 @@ export default function SingleScan() {
             </div>
           </div>
           <AnalysisPanel analysis={currentAnalysis} />
-        </>
+        </div>
       )}
     </div>
   );

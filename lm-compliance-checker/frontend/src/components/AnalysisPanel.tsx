@@ -14,10 +14,10 @@ interface AnalysisPanelProps {
 /* ── Status icon ─────────────────────────────────────────── */
 const getStatusIcon = (status: string) => {
   switch (status) {
-    case 'PASS': return <CheckCircle size={20} color="var(--success)" />;
-    case 'FAIL': return <AlertTriangle size={20} color="var(--danger)" />;
-    case 'WARN': return <AlertTriangle size={20} color="var(--warning)" />;
-    default:     return <HelpCircle   size={20} color="var(--text-muted)" />;
+    case 'PASS': return <CheckCircle size={20} className="text-[var(--success)]" />;
+    case 'FAIL': return <AlertTriangle size={20} className="text-[var(--danger)]" />;
+    case 'WARN': return <AlertTriangle size={20} className="text-[var(--warning)]" />;
+    default:     return <HelpCircle   size={20} className="text-[var(--text-muted)]" />;
   }
 };
 
@@ -98,22 +98,20 @@ export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis }) => {
   const warnCount  = summary.WARN || 0;
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+    <div className="animate-fade-in flex flex-col">
 
       {/* ── Export bar ── */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px', gap: '10px' }}>
+      <div className="flex flex-wrap justify-end gap-2.5 mb-5 w-full">
         <button
-          className="btn"
+          className="btn flex-1 sm:flex-none justify-center px-4 py-2 text-sm gap-2"
           onClick={() => api.downloadPDF(analysis.analysis_id, summary.FAIL > 0)}
-          style={{ gap: '7px', padding: '9px 18px', fontSize: '0.875rem' }}
         >
-          <FileCheck size={15} style={{ color: '#E3F0A3' }} />
+          <FileCheck size={15} className="text-[#E3F0A3]" />
           Export PDF
         </button>
         <button
-          className="btn btn-secondary"
+          className="btn btn-secondary flex-1 sm:flex-none justify-center px-4 py-2 text-sm gap-2"
           onClick={handleDownload}
-          style={{ gap: '7px', padding: '9px 18px', fontSize: '0.875rem' }}
         >
           <Download size={15} />
           Export JSON
@@ -121,51 +119,38 @@ export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis }) => {
       </div>
 
       {/* ── Score Banner ── */}
-      <div className="score-banner">
+      <div className="score-banner flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 p-5 md:p-6 mb-6">
         {/* Left: circular score ring + summary text */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+        <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
           {/* Ring */}
-          <div style={{
-            width: '84px', height: '84px', borderRadius: '50%',
-            border: `4px solid ${ringColor}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column',
+          <div className="w-16 h-16 sm:w-[84px] sm:h-[84px] rounded-full border-4 flex items-center justify-center flex-col shrink-0" style={{
+            borderColor: ringColor,
             boxShadow: `0 0 0 6px ${ringColor}18`,
-            flexShrink: 0,
           }}>
-            <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '1.45rem', fontWeight: 700,
-              color: statusColor, lineHeight: 1,
-            }}>
+            <span className="font-[family-name:var(--font-display)] text-xl sm:text-2xl font-bold leading-none" style={{ color: statusColor }}>
               {summary.compliance_score}%
             </span>
           </div>
 
           {/* Text block */}
           <div>
-            <h2 style={{
-              fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 700,
-              color: 'var(--text-primary)', marginBottom: '5px', letterSpacing: '-0.015em',
-            }}>
+            <h2 className="font-[family-name:var(--font-display)] text-xl sm:text-[1.4rem] font-bold text-[var(--text-primary)] mb-1 tracking-tight">
               Compliance Score
             </h2>
-            <p style={{ fontFamily: 'var(--font-body)', color: 'var(--text-secondary)', fontSize: '0.875rem', margin: 0 }}>
+            <p className="font-[family-name:var(--font-body)] text-[var(--text-secondary)] text-xs sm:text-sm m-0">
               {passCount} of {totalRules} Legal Metrology rules passed
             </p>
             {/* Mini stat pills */}
-            <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
-              <span className="chip chip-success">{passCount} Passed</span>
-              {warnCount > 0 && <span className="chip chip-warning">{warnCount} Warning</span>}
-              {failCount > 0 && <span className="chip chip-danger">{failCount} Failed</span>}
+            <div className="flex gap-2 mt-2 flex-wrap">
+              <span className="chip chip-success text-[10px] sm:text-xs">{passCount} Passed</span>
+              {warnCount > 0 && <span className="chip chip-warning text-[10px] sm:text-xs">{warnCount} Warning</span>}
+              {failCount > 0 && <span className="chip chip-danger text-[10px] sm:text-xs">{failCount} Failed</span>}
             </div>
           </div>
         </div>
 
         {/* Right: verdict pill */}
-        <div className={`verdict-pill ${overallStatus}`} style={{
-          display: 'flex', alignItems: 'center', gap: '8px',
-          fontSize: '0.9rem',
-        }}>
+        <div className={`verdict-pill ${overallStatus} flex items-center gap-2 text-sm sm:text-[0.9rem] w-full sm:w-auto justify-center`}>
           {overallStatus === 'COMPLIANT'
             ? <ShieldCheck size={16} />
             : <AlertTriangle size={16} />}
@@ -174,29 +159,21 @@ export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis }) => {
       </div>
 
       {/* ── Audit Metadata ── */}
-      <div style={{
-        background: 'var(--surface-card)', border: '1px solid var(--border)',
-        borderRadius: 'var(--radius-lg)', padding: '22px', marginBottom: '24px',
-        boxShadow: 'var(--shadow-1)',
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '1rem',
-            color: 'var(--text-primary)', letterSpacing: '-0.01em', margin: 0,
-          }}>
+      <div className="bg-[var(--surface-card)] border border-[var(--border)] rounded-xl p-5 sm:p-[22px] mb-6 shadow-[var(--shadow-1)] w-full">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-[family-name:var(--font-body)] font-bold text-base text-[var(--text-primary)] tracking-tight m-0">
             Audit Metadata
           </h3>
           <button
             onClick={handleSaveMeta}
             disabled={metaSaving}
-            className={metaSaved ? 'btn btn-accent' : 'btn btn-secondary'}
-            style={{ gap: '6px', padding: '7px 14px', fontSize: '0.82rem' }}
+            className={`${metaSaved ? 'btn btn-accent' : 'btn btn-secondary'} px-3 py-1.5 text-xs gap-1.5`}
           >
             {metaSaved ? <Check size={13} /> : <Save size={13} />}
             {metaSaving ? 'Saving…' : metaSaved ? 'Saved!' : 'Save'}
           </button>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '12px' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3">
           {[
             { label: 'Company Name', key: 'company_name', placeholder: 'e.g. Acme Corp' },
             { label: 'Product Name', key: 'product_name', placeholder: 'e.g. Acme Soap 100g' },
@@ -205,10 +182,9 @@ export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis }) => {
               <label className="form-label">{f.label}</label>
               <input
                 type="text"
-                value={meta[f.key as keyof typeof meta]}
+                value={(meta as any)[f.key]}
                 onChange={e => setMeta({ ...meta, [f.key]: e.target.value })}
-                className="premium-input"
-                style={{ width: '100%' }}
+                className="premium-input w-full"
                 placeholder={f.placeholder}
               />
             </div>
@@ -219,48 +195,42 @@ export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis }) => {
           <textarea
             value={meta.auditor_notes}
             onChange={e => setMeta({ ...meta, auditor_notes: e.target.value })}
-            className="premium-input"
-            style={{ width: '100%', minHeight: '68px', resize: 'vertical' }}
+            className="premium-input w-full min-h-[68px] resize-y"
             placeholder="Any specific remarks or conditions noted during inspection…"
           />
         </div>
       </div>
 
       {/* ── Rule Breakdown Grid ── */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '1.1rem',
-            color: 'var(--text-primary)', letterSpacing: '-0.01em', margin: 0,
-          }}>
+      <div className="mb-6 w-full">
+        <div className="flex items-center gap-2.5 mb-4">
+          <h3 className="font-[family-name:var(--font-body)] font-bold text-lg text-[var(--text-primary)] tracking-tight m-0">
             Rule Verification Breakdown
           </h3>
           <span className="chip chip-default">{totalRules} rules</span>
         </div>
-        <div className="rule-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {findings.map((finding: Finding, idx: number) => (
             <div key={idx} className="rule-card">
               {/* Rule header */}
               <div className="rule-header">
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <div className="flex items-start gap-3 w-full sm:w-auto overflow-hidden">
                   {/* Status icon bubble */}
-                  <div style={{
-                    width: '38px', height: '38px', borderRadius: '10px', flexShrink: 0,
+                  <div className="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center" style={{
                     background: finding.status === 'PASS'
                       ? 'var(--success-bg)'
                       : finding.status === 'FAIL'
                       ? 'var(--danger-bg)'
                       : 'var(--warning-bg)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
                     {getStatusIcon(finding.status)}
                   </div>
-                  <div>
-                    <h4 className="rule-title">{finding.rule_name}</h4>
+                  <div className="min-w-0">
+                    <h4 className="rule-title truncate" title={finding.rule_name}>{finding.rule_name}</h4>
                     <span className="rule-section">§ {finding.rule_code}</span>
                   </div>
                 </div>
-                <span className={statusChipClass(finding.status)} style={{ flexShrink: 0 }}>
+                <span className={`${statusChipClass(finding.status)} shrink-0 mt-2 sm:mt-0`}>
                   {statusLabel(finding.status)}
                 </span>
               </div>
@@ -270,9 +240,9 @@ export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis }) => {
 
               {/* Extracted value */}
               {finding.extracted_value && (
-                <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
-                  <div className="form-label" style={{ marginBottom: '5px' }}>Extracted Value</div>
-                  <div className="extracted-chip">{finding.extracted_value}</div>
+                <div className="mt-auto pt-2.5">
+                  <div className="form-label mb-1">Extracted Value</div>
+                  <div className="extracted-chip text-xs md:text-sm break-words">{finding.extracted_value}</div>
                 </div>
               )}
             </div>
@@ -281,19 +251,16 @@ export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis }) => {
       </div>
 
       {/* ── Raw OCR Drawer ── */}
-      <div className="ocr-drawer">
-        <div className="ocr-drawer-header" onClick={() => setOcrOpen(!ocrOpen)}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
-            <FileText size={16} color="var(--text-muted)" />
-            <h3 style={{
-              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '0.9rem',
-              color: 'var(--text-primary)', letterSpacing: '-0.01em', margin: 0,
-            }}>
+      <div className="ocr-drawer w-full">
+        <div className="ocr-drawer-header cursor-pointer flex justify-between p-4" onClick={() => setOcrOpen(!ocrOpen)}>
+          <div className="flex items-center gap-2">
+            <FileText size={16} className="text-[var(--text-muted)] shrink-0" />
+            <h3 className="font-[family-name:var(--font-body)] font-bold text-sm text-[var(--text-primary)] tracking-tight m-0">
               Raw Extracted OCR Text
             </h3>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)' }}>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem' }}>
+          <div className="flex items-center gap-2 text-[var(--text-muted)] shrink-0">
+            <span className="font-[family-name:var(--font-body)] text-xs hidden sm:inline">
               {ocrOpen ? 'Collapse' : 'Expand'}
             </span>
             {ocrOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -301,22 +268,18 @@ export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis }) => {
         </div>
 
         {ocrOpen && (
-          <div style={{ position: 'relative' }}>
+          <div className="relative">
             <button
               onClick={copyToClipboard}
-              className="btn btn-secondary"
-              style={{
-                position: 'absolute', top: '12px', right: '12px',
-                padding: '5px 10px', fontSize: '0.78rem', gap: '5px',
-              }}
+              className="btn btn-secondary absolute top-3 right-3 px-2.5 py-1.5 text-xs gap-1"
             >
               {copied ? <Check size={12} /> : <Copy size={12} />}
               {copied ? 'Copied!' : 'Copy'}
             </button>
-            <div className="ocr-text">
+            <div className="ocr-text max-h-64 overflow-y-auto break-words text-xs md:text-sm">
               {ocr_text
                 ? ocr_text
-                : <span style={{ opacity: 0.4 }}>No text extracted from this image.</span>}
+                : <span className="opacity-40">No text extracted from this image.</span>}
             </div>
           </div>
         )}
