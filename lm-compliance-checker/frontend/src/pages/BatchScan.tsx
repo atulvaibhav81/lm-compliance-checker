@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Upload, X, Layers, Play, Download, CheckCircle, XCircle, AlertTriangle, Clock, FileImage } from 'lucide-react';
+import { Upload, X, Layers, Play, Download, FileImage } from 'lucide-react';
 import { api } from '../services/api';
 import type { BatchJob, BatchItem } from '../services/api';
 
@@ -7,14 +7,14 @@ const MAX_FILES = 20;
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { color: string; bg: string; label: string }> = {
-    done:       { color: '#22C55E', bg: 'rgba(34,197,94,0.12)',  label: 'Done' },
-    pending:    { color: '#94A3B8', bg: 'rgba(148,163,184,0.12)', label: 'Pending' },
-    processing: { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', label: 'Processing' },
-    error:      { color: '#EF4444', bg: 'rgba(239,68,68,0.12)',  label: 'Error' },
+    done:       { color: 'text-[#22C55E]', bg: 'bg-[rgba(34,197,94,0.12)]',  label: 'Done' },
+    pending:    { color: 'text-[#94A3B8]', bg: 'bg-[rgba(148,163,184,0.12)]', label: 'Pending' },
+    processing: { color: 'text-[#3B82F6]', bg: 'bg-[rgba(59,130,246,0.12)]', label: 'Processing' },
+    error:      { color: 'text-[#EF4444]', bg: 'bg-[rgba(239,68,68,0.12)]',  label: 'Error' },
   };
   const s = map[status] || map['pending'];
   return (
-    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: s.color, background: s.bg, padding: '2px 8px', borderRadius: '12px' }}>
+    <span className={`text-[10px] font-bold ${s.color} ${s.bg} px-2 py-0.5 rounded-full uppercase tracking-wider`}>
       {s.label}
     </span>
   );
@@ -78,27 +78,27 @@ export default function BatchScan() {
   const reset = () => { setFiles([]); setBatchResult(null); setStage('select'); setError(null); setBatchName(''); };
 
   const scoreColor = (s: number | null) =>
-    s === null ? '#94A3B8' : s >= 80 ? '#22C55E' : s >= 50 ? '#F59E0B' : '#EF4444';
+    s === null ? 'text-[#94A3B8]' : s >= 80 ? 'text-[#22C55E]' : s >= 50 ? 'text-[#F59E0B]' : 'text-[#EF4444]';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="flex flex-col gap-5 page-enter w-full">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <div className="section-label" style={{ marginBottom: '6px' }}>Bulk Label Analysis</div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.025em', color: 'var(--text-primary)', margin: 0 }}>Batch Scan</h1>
-          <p style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)', fontSize: '0.875rem', margin: '5px 0 0' }}>
+          <div className="section-label mb-1.5">Bulk Label Analysis</div>
+          <h1 className="font-[family-name:var(--font-display)] text-2xl md:text-[1.7rem] font-bold tracking-tight text-[var(--text-primary)] m-0">Batch Scan</h1>
+          <p className="font-[family-name:var(--font-body)] text-[var(--text-muted)] text-sm mt-1 mb-0">
             Upload up to {MAX_FILES} label images for bulk compliance analysis
           </p>
         </div>
         {stage === 'done' && batchResult && (
-          <button onClick={() => api.downloadBatchCSV(batchResult.batch_id)} className="btn" style={{ gap: '6px', padding: '9px 16px', fontSize: '0.85rem' }}>
+          <button onClick={() => api.downloadBatchCSV(batchResult.batch_id)} className="btn w-full sm:w-auto justify-center px-4 py-2.5 text-sm gap-2">
             <Download size={15} /> Download CSV
           </button>
         )}
       </div>
 
       {error && (
-        <div style={{ padding: '12px 16px', background: 'rgba(239,68,68,0.1)', border: '1px solid var(--danger)', borderRadius: '8px', color: 'var(--danger)', fontSize: '0.85rem' }}>
+        <div className="px-4 py-3 bg-[var(--danger-bg)] border border-[var(--danger-border)] rounded-[var(--radius-md)] text-[var(--danger)] text-sm font-[family-name:var(--font-body)]">
           {error}
         </div>
       )}
@@ -111,81 +111,65 @@ export default function BatchScan() {
             onDragLeave={() => setIsDragging(false)}
             onDrop={onDrop}
             onClick={() => document.getElementById('batch-file-input')?.click()}
-            style={{
-              border: `2px dashed ${isDragging ? 'var(--accent-primary)' : 'var(--border)'}`,
-              borderRadius: '12px',
-              padding: '48px 20px',
-              textAlign: 'center',
-              cursor: 'pointer',
-              background: isDragging ? 'rgba(99,102,241,0.06)' : 'var(--bg-secondary)',
-              transition: 'all 0.2s',
-            }}
+            className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center cursor-pointer transition-colors ${isDragging ? 'border-[var(--accent-primary)] bg-[rgba(99,102,241,0.06)]' : 'border-[var(--border)] bg-[var(--surface-low)]'}`}
           >
             <input
               id="batch-file-input"
               type="file"
               multiple
               accept="image/*"
-              style={{ display: 'none' }}
+              className="hidden"
               onChange={e => e.target.files && addFiles(e.target.files)}
             />
-            <Layers size={40} color={isDragging ? 'var(--accent-primary)' : 'var(--text-muted)'} style={{ marginBottom: '12px' }} />
-            <p style={{ color: isDragging ? 'var(--accent-primary)' : 'var(--text-secondary)', fontWeight: 600, margin: '0 0 6px' }}>
+            <Layers size={40} className={`mx-auto mb-3 ${isDragging ? 'text-[var(--accent-primary)]' : 'text-[var(--text-muted)]'}`} />
+            <p className={`font-semibold m-0 mb-1.5 ${isDragging ? 'text-[var(--accent-primary)]' : 'text-[var(--text-secondary)]'}`}>
               {isDragging ? 'Drop images here' : 'Drag & drop images or click to browse'}
             </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: 0 }}>
+            <p className="text-[var(--text-muted)] text-xs m-0">
               JPEG, PNG, WebP, BMP — max {MAX_FILES} files, 10MB each
             </p>
           </div>
 
           {/* File list */}
           {files.length > 0 && (
-            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-              <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>
+            <div className="bg-[var(--surface-card)] border border-[var(--border)] rounded-xl overflow-hidden w-full">
+              <div className="p-3.5 border-b border-[var(--border)] flex justify-between items-center bg-[var(--surface-high)]">
+                <span className="font-semibold text-[0.9rem] flex flex-wrap items-center gap-1.5">
                   {files.length} file{files.length !== 1 ? 's' : ''} selected
-                  <span style={{ color: 'var(--text-muted)', fontWeight: 400, fontSize: '0.8rem', marginLeft: '8px' }}>
-                    ({(files.reduce((a, f) => a + f.size, 0) / 1024 / 1024).toFixed(1)} MB total)
+                  <span className="text-[var(--text-muted)] font-normal text-[0.8rem]">
+                    ({(files.reduce((a, f) => a + f.size, 0) / 1024 / 1024).toFixed(1)} MB)
                   </span>
                 </span>
-                <button onClick={() => setFiles([])} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>
+                <button onClick={() => setFiles([])} className="bg-transparent border-none text-[var(--text-muted)] cursor-pointer text-xs font-semibold hover:text-[var(--text-primary)]">
                   Clear all
                 </button>
               </div>
-              <div style={{ maxHeight: '240px', overflowY: 'auto' }}>
+              <div className="max-h-[240px] overflow-y-auto">
                 {files.map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 16px', borderBottom: '1px solid var(--border)' }}>
-                    <FileImage size={16} color="var(--accent-primary)" style={{ flexShrink: 0 }} />
-                    <span style={{ flex: 1, fontSize: '0.83rem', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', flexShrink: 0 }}>{(f.size / 1024).toFixed(0)} KB</span>
-                    <button onClick={() => removeFile(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 0, display: 'flex' }}>
+                  <div key={i} className="flex items-center gap-2.5 p-3 border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--surface-low)]">
+                    <FileImage size={16} className="text-[var(--accent)] shrink-0" />
+                    <span className="flex-1 text-sm text-[var(--text-primary)] overflow-hidden text-ellipsis whitespace-nowrap">{f.name}</span>
+                    <span className="text-xs text-[var(--text-muted)] shrink-0">{(f.size / 1024).toFixed(0)} KB</span>
+                    <button onClick={() => removeFile(i)} className="bg-transparent border-none cursor-pointer text-[var(--text-muted)] p-1 flex hover:text-[var(--danger)]">
                       <X size={14} />
                     </button>
                   </div>
                 ))}
               </div>
               {/* Batch name + Run */}
-              <div style={{ padding: '14px 16px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <div className="p-3.5 flex flex-col sm:flex-row gap-3 items-center bg-[var(--surface-low)] border-t border-[var(--border)]">
                 <input
                   type="text"
                   placeholder="Batch name (optional)"
                   value={batchName}
                   onChange={e => setBatchName(e.target.value)}
-                  style={{
-                    flex: 1, background: 'var(--bg-tertiary)', border: '1px solid var(--border)',
-                    borderRadius: '8px', padding: '8px 12px', color: 'var(--text-primary)', fontSize: '0.85rem',
-                  }}
+                  className="premium-input w-full flex-1"
                 />
                 <button
                   onClick={runBatch}
-                  style={{
-                    background: 'var(--accent-primary)', border: 'none', color: '#fff',
-                    borderRadius: '8px', padding: '8px 20px', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '0.85rem',
-                    whiteSpace: 'nowrap',
-                  }}
+                  className="btn w-full sm:w-auto justify-center px-6 py-2.5"
                 >
-                  <Play size={14} /> Run Batch
+                  <Play size={14} className="text-[#E3F0A3]" /> Run Batch
                 </button>
               </div>
             </div>
@@ -195,12 +179,12 @@ export default function BatchScan() {
 
       {/* Processing progress */}
       {(stage === 'uploading' || stage === 'processing') && (
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', border: '3px solid var(--accent-primary)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
-          <p style={{ fontWeight: 600, margin: '0 0 6px' }}>
+        <div className="bg-[var(--surface-card)] border border-[var(--border)] rounded-xl p-10 text-center">
+          <div className="w-12 h-12 rounded-full border-4 border-t-transparent border-[var(--accent)] animate-spin mx-auto mb-4" />
+          <p className="font-bold m-0 mb-1.5 text-[var(--text-primary)]">
             {stage === 'uploading' ? 'Uploading images…' : 'Running compliance analysis…'}
           </p>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.83rem', margin: 0 }}>
+          <p className="text-[var(--text-muted)] text-sm m-0">
             {stage === 'processing' ? `Scanning ${files.length} images through OCR + rule engine` : 'Saving files to server'}
           </p>
         </div>
@@ -208,64 +192,62 @@ export default function BatchScan() {
 
       {/* Results */}
       {stage === 'done' && batchResult && (
-        <>
+        <div className="flex flex-col gap-4 w-full">
           {/* Summary banner */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '12px' }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: 'Total', value: batchResult.total_images, color: '#3B82F6' },
-              { label: 'Processed', value: batchResult.processed_images, color: '#22C55E' },
-              { label: 'Failed', value: batchResult.failed_images, color: '#EF4444' },
-              { label: 'Avg Score', value: `${batchResult.avg_compliance_score ?? 0}%`, color: '#6366F1' },
+              { label: 'Total', value: batchResult.total_images, color: 'text-[#3B82F6]' },
+              { label: 'Processed', value: batchResult.processed_images, color: 'text-[#22C55E]' },
+              { label: 'Failed', value: batchResult.failed_images, color: 'text-[#EF4444]' },
+              { label: 'Avg Score', value: `${batchResult.avg_compliance_score ?? 0}%`, color: 'text-[#6366F1]' },
             ].map((c, i) => (
-              <div key={i} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '10px', padding: '14px 16px' }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px' }}>{c.label}</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: c.color }}>{c.value}</div>
+              <div key={i} className="bg-[var(--surface-card)] border border-[var(--border)] rounded-[var(--radius-lg)] p-4 shadow-[var(--shadow-1)]">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] mb-1">{c.label}</div>
+                <div className={`text-2xl font-bold font-[family-name:var(--font-display)] ${c.color}`}>{c.value}</div>
               </div>
             ))}
           </div>
 
           {/* Results table */}
-          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-            <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>Scan Results</span>
-              <button onClick={reset} style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: '6px', padding: '4px 12px', cursor: 'pointer', fontSize: '0.8rem' }}>
+          <div className="bg-[var(--surface-card)] border border-[var(--border)] rounded-xl overflow-hidden w-full">
+            <div className="p-3.5 border-b border-[var(--border)] flex justify-between items-center bg-[var(--surface-high)]">
+              <span className="font-bold text-[0.95rem] text-[var(--text-primary)]">Scan Results</span>
+              <button onClick={reset} className="btn btn-secondary px-3 py-1.5 text-xs">
                 New Batch
               </button>
             </div>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.83rem' }}>
+            <div className="w-full overflow-x-auto">
+              <table className="premium-table min-w-[700px]">
                 <thead>
-                  <tr style={{ background: 'var(--bg-tertiary)' }}>
+                  <tr>
                     {['#', 'Filename', 'Status', 'Score', 'Pass', 'Fail', 'Warn', 'Actions'].map(h => (
-                      <th key={h} style={{ padding: '10px 14px', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', borderBottom: '1px solid var(--border)' }}>
-                        {h}
-                      </th>
+                      <th key={h}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {batchResult.items.map((item, i) => (
-                    <tr key={item.item_id} style={{ borderBottom: '1px solid var(--border)' }}>
-                      <td style={{ padding: '10px 14px', color: 'var(--text-muted)' }}>{i + 1}</td>
-                      <td style={{ padding: '10px 14px', maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.filename}</td>
-                      <td style={{ padding: '10px 14px' }}><StatusBadge status={item.status} /></td>
-                      <td style={{ padding: '10px 14px', fontWeight: 700, color: scoreColor(item.compliance_score) }}>
+                    <tr key={item.item_id}>
+                      <td className="text-[var(--text-muted)] font-mono text-xs">{i + 1}</td>
+                      <td className="max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-[var(--text-primary)]">{item.filename}</td>
+                      <td><StatusBadge status={item.status} /></td>
+                      <td className={`font-bold ${scoreColor(item.compliance_score)}`}>
                         {item.compliance_score !== null ? `${item.compliance_score}%` : '—'}
                       </td>
-                      <td style={{ padding: '10px 14px', color: '#22C55E' }}>{item.pass_count ?? '—'}</td>
-                      <td style={{ padding: '10px 14px', color: '#EF4444' }}>{item.fail_count ?? '—'}</td>
-                      <td style={{ padding: '10px 14px', color: '#F59E0B' }}>{item.warn_count ?? '—'}</td>
-                      <td style={{ padding: '10px 14px' }}>
+                      <td className="text-[#22C55E] font-medium">{item.pass_count ?? '—'}</td>
+                      <td className="text-[#EF4444] font-medium">{item.fail_count ?? '—'}</td>
+                      <td className="text-[#F59E0B] font-medium">{item.warn_count ?? '—'}</td>
+                      <td>
                         {item.analysis_id && (
                           <button
                             onClick={() => api.downloadPDF(item.analysis_id!)}
-                            style={{ background: 'none', border: '1px solid var(--border)', color: 'var(--text-secondary)', borderRadius: '5px', padding: '3px 8px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            className="btn btn-secondary px-2 py-1 text-[0.7rem] gap-1"
                           >
                             <Download size={11} /> PDF
                           </button>
                         )}
                         {item.error_message && (
-                          <span style={{ fontSize: '0.72rem', color: 'var(--danger)' }}>{item.error_message.slice(0, 40)}</span>
+                          <span className="text-[0.72rem] text-[var(--danger)] block mt-1 leading-tight">{item.error_message.slice(0, 40)}</span>
                         )}
                       </td>
                     </tr>
@@ -274,7 +256,7 @@ export default function BatchScan() {
               </table>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
