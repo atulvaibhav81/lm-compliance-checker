@@ -153,7 +153,7 @@ export interface DashboardStats {
   }[];
 }
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://grumpy-plants-type.loca.lt/api';
 
 export const api = {
   // ── Existing endpoints ─────────────────────────────────────────────────
