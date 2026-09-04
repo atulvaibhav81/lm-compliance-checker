@@ -155,12 +155,18 @@ export interface DashboardStats {
 
 const API_BASE = 'https://mijhq-152-58-188-137.free.pinggy.net/api';
 
+const customFetch = async (url: RequestInfo | URL, options: RequestInit = {}) => {
+  const headers = new Headers(options.headers || {});
+  headers.set('x-pinggy-no-screen', 'true');
+  return fetch(url, { ...options, headers });
+};
+
 export const api = {
   // ── Existing endpoints ─────────────────────────────────────────────────
   uploadImage: async (file: File): Promise<{ upload_id: number; message: string }> => {
     const formData = new FormData();
     formData.append('file', file);
-    const res = await fetch(`${API_BASE}/upload`, { method: 'POST', body: formData });
+    const res = await customFetch(`${API_BASE}/upload`, { method: 'POST', body: formData });
     if (!res.ok) throw new Error('Upload failed');
     return res.json();
   },
@@ -169,7 +175,7 @@ export const api = {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000);
     try {
-      const res = await fetch(`${API_BASE}/analyze/${uploadId}`, {
+      const res = await customFetch(`${API_BASE}/analyze/${uploadId}`, {
         method: 'POST',
         signal: controller.signal,
       });
@@ -186,14 +192,14 @@ export const api = {
   },
 
   getReports: async (skip = 0, limit = 20): Promise<ReportSummary[]> => {
-    const res = await fetch(`${API_BASE}/reports?skip=${skip}&limit=${limit}`);
+    const res = await customFetch(`${API_BASE}/reports?skip=${skip}&limit=${limit}`);
     if (!res.ok) throw new Error('Failed to fetch reports');
     return res.json();
   },
 
   checkHealth: async (): Promise<boolean> => {
     try {
-      const res = await fetch(API_BASE.replace('/api', '/health'));
+      const res = await customFetch(API_BASE.replace('/api', '/health'));
       return res.ok;
     } catch {
       return false;
@@ -202,7 +208,7 @@ export const api = {
 
   // ── Dashboard ─────────────────────────────────────────────────────────
   getDashboardStats: async (days = 30): Promise<DashboardStats> => {
-    const res = await fetch(`${API_BASE}/dashboard/stats?days=${days}`);
+    const res = await customFetch(`${API_BASE}/dashboard/stats?days=${days}`);
     if (!res.ok) throw new Error('Failed to fetch dashboard stats');
     return res.json();
   },
@@ -215,7 +221,7 @@ export const api = {
     const formData = new FormData();
     files.forEach((f) => formData.append('files', f));
     if (batchName) formData.append('batch_name', batchName);
-    const res = await fetch(`${API_BASE}/batch/upload`, { method: 'POST', body: formData });
+    const res = await customFetch(`${API_BASE}/batch/upload`, { method: 'POST', body: formData });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: 'Upload failed' }));
       throw new Error(err.detail || 'Batch upload failed');
@@ -224,7 +230,7 @@ export const api = {
   },
 
   processBatch: async (batchId: number): Promise<BatchJob> => {
-    const res = await fetch(`${API_BASE}/batch/${batchId}/process`, { method: 'POST' });
+    const res = await customFetch(`${API_BASE}/batch/${batchId}/process`, { method: 'POST' });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: 'Processing failed' }));
       throw new Error(err.detail || 'Batch processing failed');
@@ -233,13 +239,13 @@ export const api = {
   },
 
   getBatch: async (batchId: number): Promise<BatchJob> => {
-    const res = await fetch(`${API_BASE}/batch/${batchId}`);
+    const res = await customFetch(`${API_BASE}/batch/${batchId}`);
     if (!res.ok) throw new Error('Failed to fetch batch');
     return res.json();
   },
 
   listBatches: async (skip = 0, limit = 20): Promise<BatchSummary[]> => {
-    const res = await fetch(`${API_BASE}/batch?skip=${skip}&limit=${limit}`);
+    const res = await customFetch(`${API_BASE}/batch?skip=${skip}&limit=${limit}`);
     if (!res.ok) throw new Error('Failed to list batches');
     return res.json();
   },
@@ -250,7 +256,7 @@ export const api = {
     isRepeatOffense: boolean,
     customViolations?: string[]
   ): Promise<PenaltyResult> => {
-    const res = await fetch(`${API_BASE}/penalties/calculate`, {
+    const res = await customFetch(`${API_BASE}/penalties/calculate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -267,7 +273,7 @@ export const api = {
   },
 
   getPenaltyMatrix: async (): Promise<PenaltyMatrixEntry[]> => {
-    const res = await fetch(`${API_BASE}/penalties/matrix`);
+    const res = await customFetch(`${API_BASE}/penalties/matrix`);
     if (!res.ok) throw new Error('Failed to fetch penalty matrix');
     return res.json();
   },
@@ -279,7 +285,7 @@ export const api = {
     quantityUnit: string,
     printedUsp?: number
   ): Promise<USPValidationResult> => {
-    const res = await fetch(`${API_BASE}/usp/validate`, {
+    const res = await customFetch(`${API_BASE}/usp/validate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -297,7 +303,7 @@ export const api = {
   },
 
   extractValidateUSP: async (analysisId: number): Promise<USPValidationResult> => {
-    const res = await fetch(`${API_BASE}/usp/extract-validate`, {
+    const res = await customFetch(`${API_BASE}/usp/extract-validate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ analysis_id: analysisId }),
@@ -310,7 +316,7 @@ export const api = {
   },
 
   updateMetadata: async (analysisId: number, metadata: { company_name?: string; product_name?: string; auditor_notes?: string }) => {
-    const res = await fetch(`${API_BASE}/analyze/${analysisId}/metadata`, {
+    const res = await customFetch(`${API_BASE}/analyze/${analysisId}/metadata`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(metadata),
