@@ -153,7 +153,7 @@ export interface DashboardStats {
   }[];
 }
 
-const API_BASE = 'https://REPLACE_WITH_YOUR_NEW_PINGGY_URL/api';
+const API_BASE = 'https://auwoz-2409-40e4-a-7ea3-ad7e-1e46-e8b8-8f4f.free.pinggy.net/api';
 
 export const api = {
   // ── Existing endpoints ─────────────────────────────────────────────────
